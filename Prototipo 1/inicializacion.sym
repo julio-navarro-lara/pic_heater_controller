@@ -1,0 +1,84 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @SCRATCH
+005     alarma_activada
+006-00C main.tiempo
+00D     main.termostato
+00E     main.num_intervalos
+00F-010 main.num_registros
+011     main.anno_actual
+012     main.anno_actual_1_to_3
+013-018 main.data
+019-01A @MUL1616.P1
+019-01A graba_ee.dir
+01B-01C @MUL1616.P1
+01B     graba_ee.tam
+01C-01D graba_ee.wdata
+01D     @MUL1616.@SCRATCH
+01E.0   graba_ee.ack
+01F     graba_ee.i
+020     graba_ee.@SCRATCH
+021     graba_ee.@SCRATCH
+022     @I2C_WRITE_1_31763_31764_8000000.P1
+F80     port_a
+F81     port_b
+F81     lcd
+F81.4   teclado1
+F81.5   teclado2
+F81.6   teclado3
+F81.7   teclado4
+F82     port_c
+F83     port_d
+F83     PSP_DATA
+F83.5   sistema_encendido
+F83.6   motor
+F83.7   caldera_encendida
+F84     port_e
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2_LOW
+FBB-FBC CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1_LOW
+FBE-FBF CCP_1
+FBF     CCP_1_HIGH
+
+0024  @I2C_WRITE_1_31763_31764_8000000
+0082  graba_ee
+0110  main
+0004  @MUL1616
+0110  @cinit
+0136  hecho
+
+Project Files:
+    E:\programming\sed\Proyecto 1\inicializacion.c
+    E:\programming\sed\Proyecto 1\18F4520.H
+    E:\programming\sed\Proyecto 1\proyecto1.h
+    E:\programming\sed\Proyecto 1\PCF8583.c
+    E:\programming\sed\Proyecto 1\LCDeasy.c
+    E:\programming\sed\Proyecto 1\1wire.c
+    E:\programming\sed\Proyecto 1\ds1820.c
+    E:\programming\sed\Proyecto 1\teclado.c
+    E:\programming\sed\Proyecto 1\eeprom.c
+
+Units:
+    E:\programming\sed\Proyecto 1\inicializacion.c (main)
+
+Compiler Settings:
+    Processor:      PIC18F4520
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: 1,8,16
+
+Output Files:
+    Errors:      E:\programming\sed\Proyecto 1\inicializacion.err
+    INHX32:      E:\programming\sed\Proyecto 1\inicializacion.hex
+    Symbols:     E:\programming\sed\Proyecto 1\inicializacion.sym
+    List:        E:\programming\sed\Proyecto 1\inicializacion.lst
+    Debug/COFF:  E:\programming\sed\Proyecto 1\inicializacion.cof
+    Call Tree:   E:\programming\sed\Proyecto 1\inicializacion.tre
+    Statistics:  E:\programming\sed\Proyecto 1\inicializacion.sta

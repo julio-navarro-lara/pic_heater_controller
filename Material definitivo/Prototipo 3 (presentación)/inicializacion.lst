@@ -1,0 +1,1343 @@
+CCS PCH C Compiler, Version 3.249, 28193               17-ene-10 18:26
+
+               Filename: E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.lst
+
+               ROM used: 1016 bytes (3%)
+                         Largest free fragment is 31752
+               RAM used: 17 (1%) at main() level
+                         44 (3%) worst case
+               Stack:    3 locations
+
+*
+0000:  GOTO   039E
+.................... //**************************************************************** 
+.................... //Programa de inicialización de memoria y reloj para el PROYECTO 1 
+.................... //**************************************************************** 
+....................  
+.................... #include "18F4520.H" 
+.................... //////// Standard Header file for the PIC18F4520 device //////////////// 
+.................... #DEVICE PIC18F4520 //Aunque el convertidor A/D es de 10 bits, con esta directiva 
+*
+008A:  MOVF   22,W
+008C:  BTFSC  FD8.2
+008E:  BRA    0172
+0090:  MOVWF  00
+0092:  MOVF   26,W
+0094:  BTFSC  FD8.2
+0096:  BRA    0172
+0098:  ADDWF  00,F
+009A:  BNC   00A4
+009C:  MOVLW  81
+009E:  ADDWF  00,F
+00A0:  BC    0172
+00A2:  BRA    00AC
+00A4:  MOVLW  7F
+00A6:  SUBWF  00,F
+00A8:  BNC   0172
+00AA:  BZ    0172
+00AC:  MOVFF  23,2A
+00B0:  MOVF   27,W
+00B2:  XORWF  2A,F
+00B4:  BSF    23.7
+00B6:  BSF    27.7
+00B8:  MOVF   25,W
+00BA:  MULWF  29
+00BC:  MOVFF  FF4,2C
+00C0:  MOVF   24,W
+00C2:  MULWF  28
+00C4:  MOVFF  FF4,03
+00C8:  MOVFF  FF3,2B
+00CC:  MULWF  29
+00CE:  MOVF   FF3,W
+00D0:  ADDWF  2C,F
+00D2:  MOVF   FF4,W
+00D4:  ADDWFC 2B,F
+00D6:  MOVLW  00
+00D8:  ADDWFC 03,F
+00DA:  MOVF   25,W
+00DC:  MULWF  28
+00DE:  MOVF   FF3,W
+00E0:  ADDWF  2C,F
+00E2:  MOVF   FF4,W
+00E4:  ADDWFC 2B,F
+00E6:  MOVLW  00
+00E8:  CLRF   02
+00EA:  ADDWFC 03,F
+00EC:  ADDWFC 02,F
+00EE:  MOVF   23,W
+00F0:  MULWF  29
+00F2:  MOVF   FF3,W
+00F4:  ADDWF  2B,F
+00F6:  MOVF   FF4,W
+00F8:  ADDWFC 03,F
+00FA:  MOVLW  00
+00FC:  ADDWFC 02,F
+00FE:  MOVF   23,W
+0100:  MULWF  28
+0102:  MOVF   FF3,W
+0104:  ADDWF  03,F
+0106:  MOVF   FF4,W
+0108:  ADDWFC 02,F
+010A:  MOVLW  00
+010C:  CLRF   01
+010E:  ADDWFC 01,F
+0110:  MOVF   25,W
+0112:  MULWF  27
+0114:  MOVF   FF3,W
+0116:  ADDWF  2B,F
+0118:  MOVF   FF4,W
+011A:  ADDWFC 03,F
+011C:  MOVLW  00
+011E:  ADDWFC 02,F
+0120:  ADDWFC 01,F
+0122:  MOVF   24,W
+0124:  MULWF  27
+0126:  MOVF   FF3,W
+0128:  ADDWF  03,F
+012A:  MOVF   FF4,W
+012C:  ADDWFC 02,F
+012E:  MOVLW  00
+0130:  ADDWFC 01,F
+0132:  MOVF   23,W
+0134:  MULWF  27
+0136:  MOVF   FF3,W
+0138:  ADDWF  02,F
+013A:  MOVF   FF4,W
+013C:  ADDWFC 01,F
+013E:  INCF   00,F
+0140:  BTFSC  01.7
+0142:  BRA    014E
+0144:  RLCF   2B,F
+0146:  RLCF   03,F
+0148:  RLCF   02,F
+014A:  RLCF   01,F
+014C:  DECF   00,F
+014E:  MOVLW  00
+0150:  BTFSS  2B.7
+0152:  BRA    0168
+0154:  INCF   03,F
+0156:  ADDWFC 02,F
+0158:  ADDWFC 01,F
+015A:  MOVF   01,W
+015C:  BNZ   0168
+015E:  MOVF   02,W
+0160:  BNZ   0168
+0162:  MOVF   03,W
+0164:  BNZ   0168
+0166:  INCF   00,F
+0168:  BTFSC  2A.7
+016A:  BSF    01.7
+016C:  BTFSS  2A.7
+016E:  BCF    01.7
+0170:  BRA    017A
+0172:  CLRF   00
+0174:  CLRF   01
+0176:  CLRF   02
+0178:  CLRF   03
+017A:  NOP   
+017C:  RETLW  00
+017E:  MOVLW  8E
+0180:  MOVWF  00
+0182:  MOVF   22,W
+0184:  SUBWF  00,F
+0186:  MOVFF  23,02
+018A:  MOVFF  24,01
+018E:  BSF    02.7
+0190:  MOVF   00,F
+0192:  BZ    01A6
+0194:  BCF    FD8.0
+0196:  MOVF   02,F
+0198:  BNZ   019E
+019A:  MOVF   01,F
+019C:  BZ    01A6
+019E:  RRCF   02,F
+01A0:  RRCF   01,F
+01A2:  DECFSZ 00,F
+01A4:  BRA    0194
+01A6:  BTFSS  23.7
+01A8:  BRA    01B4
+01AA:  COMF   01,F
+01AC:  COMF   02,F
+01AE:  INCF   01,F
+01B0:  BTFSC  FD8.2
+01B2:  INCF   02,F
+01B4:  NOP   
+01B6:  RETLW  00
+....................                   //fijamos que el valor leído esté representado con 8 bits 
+....................                   //(es decir de 00 a FF). 
+....................                   //Para cambiar el rango de salida usamos: ADC=10 (000 a 3FF) 
+....................                   //                                      ó ADC=16 (0000 a FFC0) 
+.................... #list 
+....................  
+.................... #include "proyecto1.h" 
+.................... //****************************************** 
+.................... //Archivo de cabecera del Proyecto 1 
+.................... //****************************************** 
+.................... //Author: Julio Navarro Lara         2010 
+....................  
+.................... //Definimos los puertos del microcontrolador 
+.................... #byte port_a = 0xF80 
+.................... #byte port_b = 0xF81 
+.................... #byte port_c = 0xF82 
+.................... #byte port_d = 0xF83 
+.................... #byte port_e = 0xF84 
+....................  
+.................... #bit sistema_encendido = 0xF83.5    //Pin que indica el encendido del sistema con un valor alto 
+.................... #bit motor = 0xF83.6                //Pin que indica el encendido del motor de circulación del agua con un valor alto 
+.................... #bit caldera_encendida = 0xF83.7    //Pin que indica el encendido de la caldera con un valor alto 
+.................... #bit menos =    0xF82.0             //Pines para gestionar la entrada de los pulsadores 
+.................... #bit mas   =    0xF83.0             //'' 
+.................... #bit si    =    0xF82.1             //'' 
+.................... #bit no    =    0xF83.1             //'' 
+.................... #bit lcd_rs   = 0xF81.2             //Pin que controla la entrada RS de la pantalla LCD 
+....................  
+.................... //Código para definir el botón NO 
+.................... #define NOCODE          100 
+....................  
+.................... //Parámetros de la pantalla LCD 
+.................... #define LCD_ORDEN       0    //Código para enviar un orden 
+.................... #define LCD_DATO        1    //Código para enviar un dato 
+....................  
+.................... #define LCD_CLEAR       0x01  //Orden para borrar la pantalla 
+.................... #define LCD_NO_CURSOR   0x0C  //Orden para eliminar el cursor de la pantalla 
+.................... #define LCD_CURSOR      0x0E  //Orden para visualizar el cursor en la pantalla 
+.................... #define LCD_PARPADEAR   0x0D  //Orden para que parpadee el cursor 
+....................  
+.................... //Tiempo que se mantienen los mensajes temporales en pantalla (ms) 
+.................... #define LCD_T_RETARDO   500 
+....................  
+.................... //Parámetros del conversor AD 
+.................... #define termostato_caldera   3   //Entrada AD que se refiere a la temperatura de referencia de la caldera 
+.................... #define temperatura_caldera  2   //Entrada AD que se refiere a la temperatura del agua en la caldera 
+.................... #define histeresis_caldera   5   //Diferencia de histéresis para el agua de la caldera 
+.................... #define t_max_caldera        60  //Temperatura máxima a la que puede regularse la caldera 
+.................... #define t_min_caldera        15  //Temperatura mínima a la que puede regularse la caldera 
+.................... #define AD_num_valores       255 //Número de valores de escala del conversor (sensibilidad de los potenciómetros) 
+....................  
+.................... //Parámetros de control de temperatura 
+.................... //Datos suministrados por el aparato de aire acondicionado (con bomba de calor) de mi casa 
+.................... #define temp_max          32  //Temperatura máxima de regulación del termostato 
+.................... #define temp_min          16  //Temperatura mínima de regulación del termostato 
+....................  
+.................... //Direcciones para la EEPROM 
+.................... #define eeprom_termostato        0x00  //Valor del termostato 
+.................... #define eeprom_num_intervalos    0x01  //Número de intervalos de programación de los que disponemos 
+.................... #define eeprom_num_registros     0x02  //Número de registros de desconexión de los que se disponen 
+.................... #define eeprom_anno_actual       0x03  //Año en el que nos encontramos 
+.................... #define eeprom_anno_0_to_3       0x04  //Año en el que nos encontramos medido de 0 a 3 (llamado 1_to_3 por razones "históricas") 
+.................... #define eeprom_programaciones    0x05  //Posición a partir de la cual se almacenan las programaciones de alarmas 
+.................... #define eeprom_registros         0x14  //Posición a partir de la cual se almacenan los registros 
+....................                                        //En este caso, por usar la memoria interna del microprocesador, caben sólo 26 registros 
+....................  
+.................... #fuses HS, NOPROTECT, BROWNOUT, PUT, NOLVP, NOXINST, WDT2048 
+.................... #use delay(clock=8000000, restart_wdt) 
+*
+0004:  MOVLW  09
+0006:  SUBWF  23,F
+0008:  BNC   0020
+000A:  CLRF   FEA
+000C:  MOVLW  23
+000E:  MOVWF  FE9
+0010:  BCF    FD8.0
+0012:  RRCF   FEF,F
+0014:  MOVF   FEF,W
+0016:  BZ    0020
+0018:  BRA    001C
+001A:  CLRWDT
+001C:  DECFSZ FEF,F
+001E:  BRA    001A
+0020:  RETLW  00
+*
+01B8:  CLRF   FEA
+01BA:  MOVLW  22
+01BC:  MOVWF  FE9
+01BE:  MOVF   FEF,W
+01C0:  BZ    01E6
+01C2:  MOVLW  02
+01C4:  MOVWF  01
+01C6:  MOVLW  BF
+01C8:  MOVWF  00
+01CA:  CLRWDT
+01CC:  DECFSZ 00,F
+01CE:  BRA    01CA
+01D0:  DECFSZ 01,F
+01D2:  BRA    01C6
+01D4:  MOVLW  96
+01D6:  MOVWF  00
+01D8:  DECFSZ 00,F
+01DA:  BRA    01D8
+01DC:  NOP   
+01DE:  NOP   
+01E0:  CLRWDT
+01E2:  DECFSZ FEF,F
+01E4:  BRA    01C2
+01E6:  GOTO   029E (RETURN)
+.................... #use rs232(baud=4800, xmit=PIN_C6,rcv=PIN_C7) 
+....................  
+.................... #include "PCF8583.c" 
+.................... // Funciones para el RTC I2c: PCF8583 
+.................... // Este código no procede de CCS (no está totalmente verificado) 
+.................... // Inluye funciones de conversión BCD-Binario 
+.................... // y de lectura/escritura a través de I2C. 
+....................  
+.................... //Vamos a eliminar todos los casos en los que se habiliten las interrupciones globales 
+.................... //Estas sentencias nos impedían utilizar estos métodos en las interrupciones 
+....................  
+.................... #ifndef PCF8583_SDA 
+.................... #define PCF8583_SDA  PIN_C4 
+.................... #define PCF8583_SCL  PIN_C3 
+.................... #endif 
+....................  
+.................... #use i2c(master, sda=PCF8583_SDA, scl=PCF8583_SCL) 
+....................  
+.................... #ifndef PCF8583_WRITE_ADDRESS 
+.................... #define PCF8583_WRITE_ADDRESS 0xA0 
+.................... #define PCF8583_READ_ADDRESS  0xA1 
+.................... #endif 
+....................  
+.................... // Register addresses 
+.................... #define PCF8583_CTRL_STATUS_REG    0x00 
+.................... #define PCF8583_100S_REG           0x01 
+.................... #define PCF8583_SECONDS_REG        0x02 
+.................... #define PCF8583_MINUTES_REG        0x03 
+.................... #define PCF8583_HOURS_REG          0x04 
+.................... #define PCF8583_DATE_REG           0x05 
+.................... #define PCF8583_MONTHS_REG         0x06 
+.................... #define PCF8583_TIMER_REG          0x07 
+....................  
+.................... #define PCF8583_ALARM_CONTROL_REG  0x08 
+.................... #define PCF8583_ALARM_100S_REG     0x09 
+.................... #define PCF8583_ALARM_SECS_REG     0x0A 
+.................... #define PCF8583_ALARM_MINS_REG     0x0B 
+.................... #define PCF8583_ALARM_HOURS_REG    0x0C 
+.................... #define PCF8583_ALARM_DATE_REG     0x0D 
+.................... #define PCF8583_ALARM_MONTHS_REG   0x0E 
+.................... #define PCF8583_ALARM_TIMER_REG    0x0F 
+....................  
+.................... // Use the first NVRAM address for the year byte. 
+.................... #define PCF8583_YEAR_REG           0x10 
+....................  
+....................  
+.................... // Commands for the Control/Status register. 
+.................... #define PCF8583_START_COUNTING     0x00 
+.................... #define PCF8583_STOP_COUNTING      0x80 
+.................... #define PCF8583_ACTIVAR_ALARMA     0b00000100  //Palabra de activación de la alarma 
+.................... #define PCF8583_DEFINIR_ALARMA     0b10010000  //Palabra para definir el comportamiento 
+....................                                                //de la alarma en su registro 
+....................  
+.................... #define PCF8583_DESACTIVAR_INT     0b00010000 
+....................  
+....................  
+....................  
+....................  
+.................... char const weekday_names[7][10] = 
+.................... { 
+.................... {"DOM"}, 
+.................... {"LUN"}, 
+.................... {"MAR"}, 
+.................... {"MIE"}, 
+.................... {"JUE"}, 
+.................... {"VIE"}, 
+.................... {"SAB"} 
+.................... }; 
+....................  
+.................... // This structure defines the user's date and time data. 
+.................... // The values are stored as unsigned integers.  The user 
+.................... // should declare a structure of this type in the application 
+.................... // program. Then the address of the structure should be 
+.................... // passed to the PCF8583 read/write functions in this 
+.................... // driver, whenever you want to talk to the chip. 
+.................... typedef struct 
+.................... { 
+.................... int8 seconds;    // 0 to 59 
+.................... int8 minutes;    // 0 to 59 
+.................... int8 hours;      // 0 to 23  (24-hour time) 
+.................... int8 day;        // 1 to 31 
+.................... int8 month;      // 1 to 12 
+.................... int8 year;       // 00 to 99 
+.................... int8 weekday;    // 0 = Sunday, 1 = Monday, etc. 
+.................... }date_time_t; 
+....................  
+....................  
+.................... //---------------------------------------------- 
+.................... void PCF8583_write_byte(int8 address, int8 data) 
+.................... { 
+.................... disable_interrupts(GLOBAL); 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_WRITE_ADDRESS); 
+.................... i2c_write(address); 
+.................... i2c_write(data); 
+.................... i2c_stop(); 
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... int8 PCF8583_read_byte(int8 address) 
+.................... { 
+.................... int8 retval; 
+....................  
+.................... disable_interrupts(GLOBAL); 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_WRITE_ADDRESS); 
+.................... i2c_write(address); 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_READ_ADDRESS); 
+.................... retval = i2c_read(0); 
+.................... i2c_stop(); 
+....................  
+.................... return(retval); 
+.................... } 
+....................  
+....................  
+.................... void PCF8583_init(void) 
+.................... { 
+.................... PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_START_COUNTING); 
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... // This function converts an 8 bit binary value 
+.................... // to an 8 bit BCD value. 
+.................... // The input range must be from 0 to 99. 
+....................  
+.................... int8 bin2bcd(int8 value) 
+.................... { 
+.................... char retval; 
+....................  
+.................... retval = 0; 
+....................  
+.................... while(1) 
+....................   { 
+....................    // Get the tens digit by doing multiple subtraction 
+....................    // of 10 from the binary value. 
+....................    if(value >= 10) 
+....................      { 
+....................       value -= 10; 
+....................       retval += 0x10; 
+....................      } 
+....................    else // Get the ones digit by adding the remainder. 
+....................      { 
+....................       retval += value; 
+....................       break; 
+....................      } 
+....................    } 
+....................  
+.................... return(retval); 
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... // This function converts an 8 bit BCD value to 
+.................... // an 8 bit binary value. 
+.................... // The input range must be from 00 to 99. 
+....................  
+.................... char bcd2bin(char bcd_value) 
+.................... { 
+.................... char temp; 
+....................  
+.................... temp = bcd_value; 
+....................  
+.................... // Shifting the upper digit right by 1 is 
+.................... // the same as multiplying it by 8. 
+.................... temp >>= 1; 
+....................  
+.................... // Isolate the bits for the upper digit. 
+.................... temp &= 0x78; 
+....................  
+.................... // Now return: (Tens * 8) + (Tens * 2) + Ones 
+.................... return(temp + (temp >> 2) + (bcd_value & 0x0f)); 
+....................  
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... void PCF8583_set_datetime(date_time_t *dt) 
+.................... { 
+.................... int8 bcd_sec; 
+.................... int8 bcd_min; 
+.................... int8 bcd_hrs; 
+.................... int8 bcd_day; 
+.................... int8 bcd_mon; 
+....................  
+.................... // Convert the input date/time into BCD values 
+.................... // that are formatted for the PCF8583 registers. 
+.................... bcd_sec = bin2bcd(dt->seconds); 
+.................... bcd_min = bin2bcd(dt->minutes); 
+.................... bcd_hrs = bin2bcd(dt->hours); 
+.................... bcd_day = bin2bcd(dt->day) | (dt->year << 6); 
+.................... bcd_mon = bin2bcd(dt->month) | (dt->weekday << 5); 
+....................  
+.................... // Stop the RTC from counting, before we write to 
+.................... // the date and time registers. 
+.................... PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_STOP_COUNTING); 
+....................  
+.................... // Write to the date and time registers.  Disable interrupts 
+.................... // so they can't disrupt the i2c operations. 
+.................... disable_interrupts(GLOBAL); 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_WRITE_ADDRESS); 
+.................... i2c_write(PCF8583_100S_REG);   // Start at 100's reg. 
+.................... i2c_write(0x00);               // Set 100's reg = 0 
+.................... i2c_write(bcd_sec); 
+.................... i2c_write(bcd_min); 
+.................... i2c_write(bcd_hrs); 
+.................... i2c_write(bcd_day); 
+.................... i2c_write(bcd_mon); 
+.................... i2c_stop(); 
+....................  
+.................... // Write the year byte to the first NVRAM location. 
+.................... // Leave it in binary format. 
+.................... PCF8583_write_byte(PCF8583_YEAR_REG, dt->year); 
+....................  
+.................... // Now allow the PCF8583 to start counting again. 
+.................... PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_START_COUNTING); 
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... // Read the Date and Time from the hardware registers 
+.................... // in the PCF8583.   We don't have to disable counting 
+.................... // during read operations, because according to the data 
+.................... // sheet, if any of the lower registers (1 to 7) is read, 
+.................... // all of them are loaded into "capture" registers. 
+.................... // All further reading within that cycle is done from 
+.................... // those registers. 
+....................  
+.................... void PCF8583_read_datetime(date_time_t *dt) 
+.................... { 
+.................... int8 year_bits; 
+.................... int8 year; 
+....................  
+.................... int8 bcd_sec; 
+.................... int8 bcd_min; 
+.................... int8 bcd_hrs; 
+.................... int8 bcd_day; 
+.................... int8 bcd_mon; 
+....................  
+.................... // Disable interrupts so the i2c process is not disrupted. 
+.................... disable_interrupts(GLOBAL); 
+....................  
+.................... // Read the date/time registers inside the PCF8583. 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_WRITE_ADDRESS); 
+.................... i2c_write(PCF8583_SECONDS_REG);   // Start at seconds reg. 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_READ_ADDRESS); 
+....................  
+.................... bcd_sec = i2c_read(); 
+.................... bcd_min = i2c_read(); 
+.................... bcd_hrs = i2c_read(); 
+.................... bcd_day = i2c_read(); 
+.................... bcd_mon = i2c_read(0); 
+.................... i2c_stop(); 
+....................  
+....................  
+.................... // Convert the date/time values from BCD to 
+.................... // unsigned 8-bit integers.  Unpack the bits 
+.................... // in the PCF8583 registers where required. 
+.................... dt->seconds = bcd2bin(bcd_sec); 
+.................... dt->minutes = bcd2bin(bcd_min); 
+.................... dt->hours   = bcd2bin(bcd_hrs & 0x3F); 
+.................... dt->day     = bcd2bin(bcd_day & 0x3F); 
+.................... dt->month   = bcd2bin(bcd_mon & 0x1F); 
+.................... dt->weekday = bcd_mon >> 5; 
+.................... year_bits   = bcd_day >> 6; 
+....................  
+.................... // Read the year byte from NVRAM. 
+.................... // This is an added feature of this driver. 
+.................... year = PCF8583_read_byte(PCF8583_YEAR_REG); 
+....................  
+.................... // Check if the two "year bits" were incremented by 
+.................... // the PCF8583.  If so, increment the 8-bit year 
+.................... // byte (read from NVRAM) by the same amount. 
+.................... while(year_bits != (year & 3)) 
+....................       year++; 
+....................  
+.................... dt->year = year; 
+....................  
+.................... // Now update the year byte in the NVRAM 
+.................... // inside the PCF8583. 
+.................... PCF8583_write_byte(PCF8583_YEAR_REG, year); 
+....................  
+.................... } 
+....................  
+.................... //Método que permite establecer una alarma, dados horas, minutos y segundos 
+.................... //Author: Julio Navarro Lara 
+.................... void PCF8583_establecer_alarma(int8 horas, int8 minutos, int8 segundos){ 
+....................    int8 bcd_horas; 
+....................    int8 bcd_minutos; 
+....................    int8 bcd_segundos; 
+....................  
+....................    //Transformamos a BCD las horas y los minutos introducidos 
+....................    bcd_horas = bin2bcd(horas); 
+....................    bcd_minutos = bin2bcd(minutos); 
+....................    bcd_segundos = bin2bcd(segundos); 
+....................  
+....................    //Paramos de contar el tiempo para escribir los datos 
+....................    PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_STOP_COUNTING); 
+....................  
+....................    //Definimos las condiciones de la alarma 
+....................    PCF8583_write_byte(PCF8583_ALARM_CONTROL_REG, 
+....................                               PCF8583_DEFINIR_ALARMA); 
+....................  
+....................    //Desactivamos las interrupciones para que no interfieran en la escritura i2c 
+....................    disable_interrupts(GLOBAL); 
+....................    i2c_start(); 
+....................    i2c_write(PCF8583_WRITE_ADDRESS); 
+....................    //Escribimos en los registros de hora y minutos 
+....................    i2c_write(PCF8583_ALARM_100S_REG); 
+....................    i2c_write(0x00); 
+....................    i2c_write(bcd_segundos); 
+....................    i2c_write(bcd_minutos); 
+....................    i2c_write(bcd_horas); 
+....................    i2c_stop(); 
+....................  
+....................    //OJO! No volvemos a activar las interrupciones por si llamamos al método 
+....................    //dentro de una rutina de interrupción 
+....................  
+....................    //Activamos la alarma 
+....................    PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_ACTIVAR_ALARMA); 
+....................  
+....................  
+.................... } 
+....................  
+.................... #include "LCDeasy.c" 
+.................... ////----------------------------------------------------------------------------//// 
+.................... // 	Funciones para la gestion del display LCD de la EasyPIC3 
+.................... //	con el compilador de CCS. 
+.................... //	Es una adaptación del archivo LCD.c de CCS para las prácticas de la 
+.................... //	asignatura, y por tanto no distribuible a usuarios no autorizados. 
+.................... //------------------------------------------------------------------------------//// 
+....................  
+.................... //  lcd_init()   Inicializa el LCD: debe ser llamada antes que las otras funciones. 
+.................... // 
+.................... //  lcd_putc(c)  Visualiza c en la siguiente posición del display. 
+.................... //               Caracteres especiales de control: 
+.................... //                      \f  Borrar display 
+.................... //                      \n  Saltar a la segunda linea 
+.................... //                      \b  Retroceder una posición. 
+.................... // 
+.................... //  lcd_gotoxy(x,y) Selecciona la nueva posicion de escritura en el display. 
+.................... //                  (la esquina superior izquierda es 1,1) 
+.................... // 
+.................... //  lcd_getc(x,y)   Devuelve el caracter de la posicion x,y del display. 
+.................... //			(esta función no va en la EASYPIC3, pues R/W=0) 
+.................... // 
+.................... //  lcd_send_byte(rs,byte)	escribe byte en el registro de datos(con rs=1) o de 
+.................... //				instrucciones (con rs=0). 
+.................... //------------------------------------------------------------------------------// 
+.................... // Conexion del LCD con el PIC: 
+.................... //     RB0 -- 
+.................... //     RB1 -- 
+.................... //     RB2  rs 
+.................... //     RB3  Enable 
+.................... //     RB4  D4 
+.................... //     RB5  D5 
+.................... //     RB6  D6 
+.................... //     RB7  D7 
+.................... // 
+.................... // Los pines D0-D3 del LCD no se usan 
+.................... // El pin RB0 del PIC no se usa 
+.................... // El pin RB1 no está conectado en la tarjeta, 
+.................... // podría ser para r/w 
+....................  
+.................... // Un-comment the following define to use port B 
+.................... #define use_portb_lcd TRUE 		//LINEA DES-COMENTADA---------------- 
+....................  
+....................  
+.................... struct lcd_pin_map {                 // This structure is overlayed 
+....................            int unused : 2 ;	//MODIFICADA PARA EASYPIC-------------------- 
+.................... 	   //BOOLEAN rw;		//MODIFICADA PARA EASYPIC-------------------- 
+.................... 	   BOOLEAN rs;           // on to an I/O port to gain 
+....................            BOOLEAN ENABLE;            // access to the LCD pins. 
+....................            		           	// The bits are allocated from 
+....................            			          // low order up.  ENABLE will 
+....................            int     data : 4;         	// be pin B3------------------------- 
+....................         } lcd; 
+....................  
+....................  
+.................... #if defined(__PCH__) 
+.................... #if defined use_portb_lcd 
+....................    #byte lcd = 0xF81                   // This puts the entire structure 
+.................... #else 
+....................    #byte lcd = 0xF83                   // This puts the entire structure 
+.................... #endif 
+.................... #else 
+.................... #if defined use_portb_lcd 
+....................    #byte lcd = 6                  // on to port B (at address 6) 
+.................... #else 
+....................    #byte lcd = 8                 // on to port D (at address 8) 
+.................... #endif 
+.................... #endif 
+....................  
+.................... #if defined use_portb_lcd 
+....................    #define set_tris_lcd(x) set_tris_b(x) 
+.................... #else 
+....................    #define set_tris_lcd(x) set_tris_d(x) 
+.................... #endif 
+....................  
+....................  
+.................... #define lcd_type 2           // 0=5x7, 1=5x10, 2=2 lines 
+.................... #define lcd_line_two 0x40    // LCD RAM address for the second line 
+....................  
+....................  
+.................... BYTE const LCD_INIT_STRING[4] = {0x24 | (lcd_type << 2), 0xF, 1, 6}; 
+....................                              // These bytes need to be sent to the LCD 
+....................                              // to start it up. 
+....................  
+....................  
+....................                              // The following are used for setting 
+....................                              // the I/O port direction register. 
+....................  
+.................... struct lcd_pin_map const LCD_WRITE = {3,0,0,0}; // For write mode all pins are out 
+.................... struct lcd_pin_map const LCD_READ = {3,0,0,15}; // For read mode data pins are in 
+....................  
+....................  
+....................  
+.................... BYTE lcd_read_byte() { 
+....................       BYTE low,high; 
+....................       set_tris_lcd(LCD_READ); 
+....................       //////lcd.rw = 1; 
+....................       delay_cycles(1); 
+....................       lcd.enable = 1; 
+....................       delay_cycles(1); 
+....................       high = lcd.data; 
+....................       lcd.enable = 0; 
+....................       delay_cycles(1); 
+....................       lcd.enable = 1; 
+....................       delay_us(1); 
+....................       low = lcd.data; 
+....................       lcd.enable = 0; 
+....................       set_tris_lcd(LCD_WRITE); 
+....................       return( (high<<4) | low); 
+.................... } 
+....................  
+....................  
+.................... void lcd_send_nibble( BYTE n ) { 
+....................       lcd.data = n; 
+....................       delay_cycles(1); 
+....................       lcd.enable = 1; 
+....................       delay_us(2); 
+....................       lcd.enable = 0; 
+.................... } 
+....................  
+....................  
+.................... void lcd_send_byte( BYTE address, BYTE n ) { 
+....................  
+....................       lcd.rs = 0; 
+....................       delay_us(3000); 
+.................... //      while ( bit_test(lcd_read_byte(),7) ) ; 
+....................       lcd.rs = address; 
+....................       delay_cycles(1); 
+....................       //////////lcd.rw = 0; 
+....................       delay_cycles(1); 
+....................       lcd.enable = 0; 
+....................       lcd_send_nibble(n >> 4); 
+....................       lcd_send_nibble(n & 0xf); 
+.................... } 
+....................  
+....................  
+.................... void lcd_init() { 
+....................     BYTE i; 
+....................     set_tris_lcd(LCD_WRITE); 
+....................     lcd.rs = 0; 
+....................     /////lcd.rw = 0; 
+....................     lcd.enable = 0; 
+....................     delay_ms(50); 
+....................     //for(i=1;i<=3;++i) { 
+....................     //   lcd_send_nibble(3); 
+....................     //  delay_ms(5); 
+....................     //} 
+....................     lcd_send_nibble(2); 
+....................     delay_ms(5); 
+....................     for(i=0;i<=3;++i) 
+....................        { lcd_send_byte(0,LCD_INIT_STRING[i]); 
+....................         delay_ms(5); } 
+.................... } 
+....................  
+....................  
+.................... void lcd_gotoxy( BYTE x, BYTE y) { 
+....................    BYTE address; 
+....................  
+....................    if(y!=1) 
+....................      address=lcd_line_two; 
+....................    else 
+....................      address=0; 
+....................    address+=x-1; 
+....................    lcd_send_byte(0,0x80|address); 
+.................... } 
+....................  
+.................... void lcd_putc( char c) { 
+....................    switch (c) { 
+....................      case '\f'   : lcd_send_byte(0,1); 
+....................                    delay_ms(2); 
+....................                                            break; 
+....................      case '\n'   : lcd_gotoxy(1,2);        break; 
+....................      case '\b'   : lcd_send_byte(0,0x10);  break; 
+....................      default     : lcd_send_byte(1,c);     break; 
+....................    } 
+.................... } 
+....................  
+.................... char lcd_getc( BYTE x, BYTE y) { 
+....................    char value; 
+....................  
+....................     lcd_gotoxy(x,y); 
+....................     while ( bit_test(lcd_read_byte(),7) ); // wait until busy flag is low 
+....................     lcd.rs=1; 
+....................     value = lcd_read_byte(); 
+....................     lcd.rs=0; 
+....................     return(value); 
+.................... } 
+....................  
+.................... #include "1wire.c" 
+.................... /***********************1Wire Class***********************/ 
+.................... /*Funciones básicas para comunicación con un solo sensor 1wire */ 
+.................... /*********************************************************/ 
+.................... /*-------1-wire definitions-------*/ 
+....................  
+.................... #define ONE_WIRE_PIN PIN_A5 //modificar de acuerdo con la tarjeta 
+....................  
+....................  
+.................... /************onewire_reset*************************************************/ 
+.................... void onewire_reset()  // OK if just using a single permanently connected device 
+.................... { 
+....................  output_low(ONE_WIRE_PIN); 
+*
+0022:  BCF    F92.5
+0024:  BCF    F89.5
+....................  delay_us( 500 ); // pull 1-wire low for reset pulse 
+0026:  CLRWDT
+0028:  MOVLW  02
+002A:  MOVWF  22
+002C:  MOVLW  F7
+002E:  MOVWF  23
+0030:  RCALL  0004
+0032:  DECFSZ 22,F
+0034:  BRA    002C
+....................  output_float(ONE_WIRE_PIN); // float 1-wire high 
+0036:  BSF    F92.5
+....................  delay_us( 500 ); // wait-out remaining initialisation window. 
+0038:  CLRWDT
+003A:  MOVLW  02
+003C:  MOVWF  22
+003E:  MOVLW  F7
+0040:  MOVWF  23
+0042:  RCALL  0004
+0044:  DECFSZ 22,F
+0046:  BRA    003E
+....................  output_float(ONE_WIRE_PIN); 
+0048:  BSF    F92.5
+.................... } 
+004A:  RETLW  00
+....................  
+.................... /*********************** onewire_write() ********************************/ 
+.................... /*Esta función escribe un byte en el sensor.*/ 
+.................... /* */ 
+.................... /*Parametros: byte - el byte a escribir en el 1wire */ 
+....................  
+.................... void onewire_write(int data) 
+.................... { 
+....................  int count; 
+....................  
+....................  for (count=0; count<8; ++count) 
+004C:  CLRF   24
+004E:  MOVF   24,W
+0050:  SUBLW  07
+0052:  BNC   0088
+....................  { 
+....................   output_low(ONE_WIRE_PIN); 
+0054:  BCF    F92.5
+0056:  BCF    F89.5
+....................   delay_us( 2 ); // pull 1-wire low to initiate write time-slot. 
+0058:  CLRWDT
+005A:  NOP   
+005C:  NOP   
+005E:  NOP   
+....................   output_bit(ONE_WIRE_PIN, shift_right(&data,1,0)); // set output bit on 1-wire 
+0060:  BCF    FD8.0
+0062:  RRCF   23,F
+0064:  BC    006A
+0066:  BCF    F89.5
+0068:  BRA    006C
+006A:  BSF    F89.5
+006C:  BCF    F92.5
+....................   delay_us( 60 ); // wait until end of write slot. 
+006E:  CLRWDT
+0070:  MOVLW  27
+0072:  MOVWF  00
+0074:  DECFSZ 00,F
+0076:  BRA    0074
+0078:  NOP   
+....................   output_float(ONE_WIRE_PIN); // set 1-wire high again, 
+007A:  BSF    F92.5
+....................   delay_us( 2 ); // for more than 1us minimum. 
+007C:  CLRWDT
+007E:  NOP   
+0080:  NOP   
+0082:  NOP   
+....................  } 
+0084:  INCF   24,F
+0086:  BRA    004E
+.................... } 
+0088:  RETLW  00
+....................  
+.................... /*********************** read1wire() *********************************/ 
+.................... /*Esta función lee un dato de 8 bits del sensor.*/ 
+.................... /*Devuelve: dato de 8-bit (1-byte)*/ 
+....................  
+.................... int onewire_read() 
+.................... { 
+....................  int count, data; 
+....................  
+....................  for (count=0; count<8; ++count) 
+*
+02B0:  CLRF   14
+02B2:  MOVF   14,W
+02B4:  SUBLW  07
+02B6:  BNC   02F2
+....................  { 
+....................   output_low(ONE_WIRE_PIN); 
+02B8:  BCF    F92.5
+02BA:  BCF    F89.5
+....................   delay_us( 2 ); // pull 1-wire low to initiate read time-slot. 
+02BC:  CLRWDT
+02BE:  NOP   
+02C0:  NOP   
+02C2:  NOP   
+....................   output_float(ONE_WIRE_PIN); // now let 1-wire float high, 
+02C4:  BSF    F92.5
+....................   delay_us( 8 ); // let device state stabilise, 
+02C6:  CLRWDT
+02C8:  MOVLW  04
+02CA:  MOVWF  00
+02CC:  DECFSZ 00,F
+02CE:  BRA    02CC
+02D0:  NOP   
+02D2:  NOP   
+....................   shift_right(&data,1,input(ONE_WIRE_PIN)); // and load result. 
+02D4:  BSF    F92.5
+02D6:  BTFSC  F80.5
+02D8:  BRA    02DE
+02DA:  BCF    FD8.0
+02DC:  BRA    02E0
+02DE:  BSF    FD8.0
+02E0:  RRCF   15,F
+....................   delay_us( 120 ); // wait until end of read slot. 
+02E2:  CLRWDT
+02E4:  MOVLW  4F
+02E6:  MOVWF  00
+02E8:  DECFSZ 00,F
+02EA:  BRA    02E8
+02EC:  NOP   
+....................  } 
+02EE:  INCF   14,F
+02F0:  BRA    02B2
+....................  
+....................  return( data ); 
+02F2:  MOVFF  15,01
+.................... } 
+02F6:  GOTO   0310 (RETURN)
+....................  
+.................... /////////////////////////////////////////////////////////////////// 
+....................  
+....................  
+....................  
+.................... #include "ds1820.c" 
+....................  
+.................... /***************************************************/ 
+.................... /*Driver básico del termómetro/termostato ds1820.c */ 
+.................... // 
+.................... //Realiza una secuencia completa de incialización, conversión 
+.................... //de temperatura, y lectura del (único) sensor de temperatura 
+.................... //con alimentación externa (no parásita). 
+.................... // 
+.................... /***************************************************/ 
+....................  
+.................... float ds1820_read() 
+.................... { 
+....................  int8 busy=0, temp1, temp2; 
+....................  signed int16 temp3; 
+....................  float result; 
+....................  
+....................  onewire_reset();     // Cada acceso al sensor debe iniciarse con reset 
+....................  onewire_write(0xCC); //Instrucción SKIP ROM (selecciona todos los dispositivos del 1wire) 
+....................  onewire_write(0x44); //Orden de inicio de conversión de temperatura 
+....................  
+....................  while (busy == 0) 	//el sensor mantiene la linea a 0 mientras realiza la conversión 
+....................   busy = onewire_read(); //y la deja a 1 al completarla 
+....................  
+....................  onewire_reset(); 
+....................  onewire_write(0xCC); 
+....................  onewire_write(0xBE); //Envío de la orden READ SCRATCHPAD (lectura de la memoria temporal) 
+....................  temp1 = onewire_read(); //lectura del LSB de la temperatura 
+....................  temp2 = onewire_read(); //lectura del MSB de la temperatura 
+....................  
+....................  temp3 = make16(temp2, temp1); // 
+....................  result = (float) temp3 / 2.0;   //Calculation for DS18S20 with 0.5 deg C resolution 
+.................... // result = (float) temp3 / 16.0;  //Calculation for DS18B20 with 0.1 deg C resolution 
+....................  
+....................  delay_ms(200); 
+....................  return(result); 
+.................... } 
+....................  
+.................... //Las siguientes funciones al final no las hemos usado en el programa. 
+.................... //De todas formas, las mantenemos aquí por si son necesarias en otra ocasión. 
+....................  
+.................... //Establece la temperatura máxima y mínima para el termostato 
+.................... void ds1820_establecer_TH_TL(float th, float tl){ 
+....................    float th2, tl2; 
+....................    onewire_reset(); 
+*
+01EA:  RCALL  0022
+....................    onewire_write(0xCC); //Accedemos a todos los dispositivos 
+01EC:  MOVLW  CC
+01EE:  MOVWF  23
+01F0:  RCALL  004C
+....................    onewire_write(0x4E); //Envío de la orden Write Scratchpad (escritura en la memoria principal) 
+01F2:  MOVLW  4E
+01F4:  MOVWF  23
+01F6:  RCALL  004C
+....................    th2=2*th; 
+01F8:  CLRF   25
+01FA:  CLRF   24
+01FC:  CLRF   23
+01FE:  MOVLW  80
+0200:  MOVWF  22
+0202:  MOVFF  15,29
+0206:  MOVFF  14,28
+020A:  MOVFF  13,27
+020E:  MOVFF  12,26
+0212:  RCALL  008A
+0214:  MOVFF  03,1D
+0218:  MOVFF  02,1C
+021C:  MOVFF  01,1B
+0220:  MOVFF  00,1A
+....................    tl2=2*tl; 
+0224:  CLRF   25
+0226:  CLRF   24
+0228:  CLRF   23
+022A:  MOVLW  80
+022C:  MOVWF  22
+022E:  MOVFF  19,29
+0232:  MOVFF  18,28
+0236:  MOVFF  17,27
+023A:  MOVFF  16,26
+023E:  RCALL  008A
+0240:  MOVFF  03,21
+0244:  MOVFF  02,20
+0248:  MOVFF  01,1F
+024C:  MOVFF  00,1E
+....................    onewire_write((int8)th2); 
+0250:  MOVFF  1D,25
+0254:  MOVFF  1C,24
+0258:  MOVFF  1B,23
+025C:  MOVFF  1A,22
+0260:  RCALL  017E
+0262:  MOVFF  01,22
+0266:  MOVFF  01,23
+026A:  RCALL  004C
+....................    onewire_write((int8)tl2); 
+026C:  MOVFF  21,25
+0270:  MOVFF  20,24
+0274:  MOVFF  1F,23
+0278:  MOVFF  1E,22
+027C:  RCALL  017E
+027E:  MOVFF  01,22
+0282:  MOVFF  01,23
+0286:  RCALL  004C
+....................  
+....................    //Copiamos los valores en la ROM 
+....................    onewire_reset(); 
+0288:  RCALL  0022
+....................    onewire_write(0xCC); 
+028A:  MOVLW  CC
+028C:  MOVWF  23
+028E:  RCALL  004C
+....................    onewire_write(0x48); 
+0290:  MOVLW  48
+0292:  MOVWF  23
+0294:  RCALL  004C
+....................  
+....................    //Dejamos un poco de tiempo para que se escriba en la EEPROM 
+....................    //El tiempo ha sido calculado a partir de la simulación en Proteus 
+....................    delay_us(10600); 
+0296:  CLRWDT
+0298:  MOVLW  0A
+029A:  MOVWF  22
+029C:  BRA    01B8
+029E:  MOVLW  0D
+02A0:  MOVWF  22
+02A2:  MOVLW  2C
+02A4:  MOVWF  23
+02A6:  RCALL  0004
+02A8:  DECFSZ 22,F
+02AA:  BRA    02A2
+....................  
+.................... } 
+02AC:  GOTO   03E8 (RETURN)
+....................  
+.................... //Lee el bit menos significativo de la dirección del sensor de temperatura en 
+.................... //el caso de que haya un único dispositivo (si no es así, hay conflicto) 
+.................... void ds1820_leer_direccion(int* dir) 
+.................... { 
+....................    int contador; 
+....................    //Reseteamos el one wire 
+....................    onewire_reset(); 
+....................    onewire_write(0x33); //Orden READ ROM 
+....................    //Leemos los 64 bits de dirección de la ROM del dispositivo 
+....................    for(contador=0; contador<8; contador++) 
+....................    { 
+....................       *dir = onewire_read(); 
+....................       dir++; 
+....................    } 
+.................... } 
+....................  
+.................... //Intenta buscar la alarma del dispositivo con dirección dir por si ha saltado 
+.................... //el termostato. Si lo ha hecho, devuelve TRUE, y en caso contrario, FALSE. 
+.................... int1 ds1820_termostato(){ 
+....................    int busy=0; 
+*
+02FA:  CLRF   12
+....................    int1 bit1, bit2; 
+....................  
+....................    //Primero forzamos la conversión de la temperatura 
+....................    onewire_reset(); 
+02FC:  RCALL  0022
+....................    onewire_write(0xCC); 
+02FE:  MOVLW  CC
+0300:  MOVWF  23
+0302:  RCALL  004C
+....................    onewire_write(0x44); 
+0304:  MOVLW  44
+0306:  MOVWF  23
+0308:  RCALL  004C
+....................  
+....................    while(busy == 0) 
+....................       busy = onewire_read(); 
+030A:  MOVF   12,F
+030C:  BNZ   0316
+030E:  BRA    02B0
+0310:  MOVFF  01,12
+0314:  BRA    030A
+....................  
+....................    onewire_reset(); 
+0316:  RCALL  0022
+....................    onewire_write(0xEC); //Buscamos la alarma de algún dispositivo (función ALARM SEARCH) 
+0318:  MOVLW  EC
+031A:  MOVWF  23
+031C:  RCALL  004C
+....................     
+....................    //Leer 
+....................    output_low(ONE_WIRE_PIN); 
+031E:  BCF    F92.5
+0320:  BCF    F89.5
+....................    delay_us( 2 ); // pull 1-wire low to initiate read time-slot. 
+0322:  CLRWDT
+0324:  NOP   
+0326:  NOP   
+0328:  NOP   
+....................    output_float(ONE_WIRE_PIN); // now let 1-wire float high, 
+032A:  BSF    F92.5
+....................    delay_us( 8 ); // let device state stabilise, 
+032C:  CLRWDT
+032E:  MOVLW  04
+0330:  MOVWF  00
+0332:  DECFSZ 00,F
+0334:  BRA    0332
+0336:  NOP   
+0338:  NOP   
+....................    bit1 = input(ONE_WIRE_PIN); // and load result. 
+033A:  BSF    F92.5
+033C:  BCF    13.0
+033E:  BTFSC  F80.5
+0340:  BSF    13.0
+....................    delay_us( 120 ); // wait until end of read slot. 
+0342:  CLRWDT
+0344:  MOVLW  4F
+0346:  MOVWF  00
+0348:  DECFSZ 00,F
+034A:  BRA    0348
+034C:  NOP   
+....................     
+....................    output_low(ONE_WIRE_PIN); 
+034E:  BCF    F92.5
+0350:  BCF    F89.5
+....................    delay_us( 2 ); // pull 1-wire low to initiate read time-slot. 
+0352:  CLRWDT
+0354:  NOP   
+0356:  NOP   
+0358:  NOP   
+....................    output_float(ONE_WIRE_PIN); // now let 1-wire float high, 
+035A:  BSF    F92.5
+....................    delay_us( 8 ); // let device state stabilise, 
+035C:  CLRWDT
+035E:  MOVLW  04
+0360:  MOVWF  00
+0362:  DECFSZ 00,F
+0364:  BRA    0362
+0366:  NOP   
+0368:  NOP   
+....................    bit2 = input(ONE_WIRE_PIN); // and load result. 
+036A:  BSF    F92.5
+036C:  BCF    13.1
+036E:  BTFSC  F80.5
+0370:  BSF    13.1
+....................    delay_us( 120 ); // wait until end of read slot. 
+0372:  CLRWDT
+0374:  MOVLW  4F
+0376:  MOVWF  00
+0378:  DECFSZ 00,F
+037A:  BRA    0378
+037C:  NOP   
+....................     
+....................    if(bit1 != bit2) 
+037E:  CLRF   00
+0380:  BTFSC  13.1
+0382:  BSF    00.0
+0384:  MOVF   13,W
+0386:  XORWF  00,W
+0388:  ANDLW  01
+038A:  BZ    0394
+....................       return TRUE; 
+038C:  MOVLW  01
+038E:  MOVWF  01
+0390:  BRA    039A
+....................    else 
+0392:  BRA    039A
+....................       return FALSE; 
+0394:  MOVLW  00
+0396:  MOVWF  01
+0398:  BRA    039A
+....................  
+....................  
+.................... } 
+039A:  GOTO   03EA (RETURN)
+....................  
+.................... ////////////////////////////////////////////////////////////////////////////////////// 
+....................  
+....................  
+.................... //#include <stdlib.h> 
+....................  
+....................  
+.................... #use fast_io(A) 
+.................... #use fast_io(B) 
+.................... #use fast_io(C) 
+.................... #use fast_io(D) 
+....................  
+....................  
+....................  
+....................  
+....................  
+.................... //================================= 
+.................... void main() 
+.................... { 
+039E:  CLRF   FF8
+03A0:  BCF    FD0.7
+03A2:  CLRF   FEA
+03A4:  CLRF   FE9
+03A6:  BCF    FB8.3
+03A8:  MOVLW  19
+03AA:  MOVWF  FAF
+03AC:  MOVLW  22
+03AE:  MOVWF  FAC
+03B0:  MOVLW  90
+03B2:  MOVWF  FAB
+03B4:  MOVF   FC1,W
+03B6:  ANDLW  C0
+03B8:  IORLW  0F
+03BA:  MOVWF  FC1
+03BC:  MOVLW  07
+03BE:  MOVWF  FB4
+....................    date_time_t tiempo; 
+....................    int termostato; 
+....................    int num_intervalos; 
+....................    int num_registros; 
+....................    int anno_actual; 
+....................    int anno_actual_0_to_3; 
+....................  
+....................    //Establecemos el estado de los puertos como entradas o salidas 
+....................    set_tris_b(0x03); 
+03C0:  MOVLW  03
+03C2:  MOVWF  F93
+....................    set_tris_d(0x03); 
+03C4:  MOVWF  F95
+....................    set_tris_c(0x03); 
+03C6:  MOVWF  F94
+....................  
+....................    sistema_encendido = FALSE; 
+03C8:  BCF    F83.5
+....................    motor = FALSE; 
+03CA:  BCF    F83.6
+....................    caldera_encendida = FALSE; 
+03CC:  BCF    F83.7
+....................     
+....................    /* 
+....................  
+....................    termostato = 20; 
+....................    num_intervalos = 0; 
+....................    num_registros = 0; 
+....................    anno_actual = 10; 
+....................    anno_actual_0_to_3 = 2; 
+....................  
+....................    write_eeprom(eeprom_termostato, termostato); 
+....................    write_eeprom(eeprom_num_intervalos, num_intervalos); 
+....................    write_eeprom(eeprom_num_registros, num_registros); 
+....................    write_eeprom(eeprom_anno_actual, anno_actual); 
+....................    write_eeprom(eeprom_anno_0_to_3, anno_actual_0_to_3); 
+....................    */ 
+....................  
+....................    /* 
+....................    tiempo.month   = ; 
+....................    tiempo.day     = ; 
+....................    tiempo.year    = ; 
+....................    tiempo.hours   = ; 
+....................    tiempo.minutes = ; 
+....................    tiempo.seconds = ; 
+....................    tiempo.weekday = ; 
+....................  
+....................    PCF8583_set_datetime(&tiempo); 
+....................    */ 
+....................     
+....................    ds1820_establecer_TH_TL((float)127.5, (float)20); 
+03CE:  CLRF   15
+03D0:  CLRF   14
+03D2:  MOVLW  7F
+03D4:  MOVWF  13
+03D6:  MOVLW  85
+03D8:  MOVWF  12
+03DA:  CLRF   19
+03DC:  CLRF   18
+03DE:  MOVLW  20
+03E0:  MOVWF  17
+03E2:  MOVLW  83
+03E4:  MOVWF  16
+03E6:  BRA    01EA
+....................     
+....................    while(1) 
+....................    { 
+....................       if(ds1820_termostato()) 
+03E8:  BRA    02FA
+03EA:  MOVF   01,F
+03EC:  BZ    03F2
+....................          sistema_encendido = TRUE; 
+03EE:  BSF    F83.5
+....................       else 
+03F0:  BRA    03F4
+....................          sistema_encendido = FALSE; 
+03F2:  BCF    F83.5
+....................     
+....................    } 
+03F4:  BRA    03E8
+....................     
+....................  
+.................... } 
+03F6:  SLEEP 
+
+Configuration Fuses:
+   Word  1: 0200   HS NOIESO NOFCMEN RESERVED
+   Word  2: 171E   BROWNOUT WDT BORV25 PUT WDT2048
+   Word  3: 8300   PBADEN CCP2C1 NOLPT1OSC MCLR RESERVED
+   Word  4: 0081   STVREN NODEBUG NOLVP NOXINST RESERVED
+   Word  5: C00F   NOPROTECT NOCPD NOCPB
+   Word  6: E00F   NOWRT NOWRTD NOWRTC NOWRTB
+   Word  7: 400F   NOEBTR NOEBTRB

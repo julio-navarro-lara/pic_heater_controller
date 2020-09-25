@@ -1,0 +1,254 @@
+-Dirección de reloj calendario: 1010 000
+ Dirección de EEProm: 1010 111
+
+-Ojo con el ejemplo del timbre para el pic16
+
+-Para la EasyPic3, ajustar el rango de variación de la temperatura de la caldera
+
+-No se puede tener más de 4 horas encendida la caldera por programación.
+El límite son 255 minutos.
+
+-Quitar retardos cuando no sean necesarios
+
+-Posibilidad de no tener ninguna alarma
+
+-Preguntar por bloqueo del reloj
+_problema con tardar mucho en escribir por parte del usuario
+
+-Inicializar tiempo al actual para el caso de la EasyPic
+
+-Hacer que si supera 4 horas se apague el sistema. Si el usuario lo enciende será su responsabilidad.
+
+-Explicar problemas de paginación (por qué no utilizar posiciones consecutivas)
+ //He optado por escribir de programación en programación porque a pesar de que
+   //en el datasheet aseguran que la memoria tiene una paginación de 32 bytes en la
+   //simulación parece tener menos, así que de este modo nos evitamos problemas
+
+-Hablar de problema a la hora de calcular la media
+
+-Eliminar métodos inservibles de los archivos auxiliares
+
+-Búsqueda de microcontrolador de 16bit- Búsqueda paramétrica en la web de Microchip
+	- Que esté en producción
+	- Memoria Flash
+	- 28 KB de memoria de programa
+	- RAM >= 128 bytes
+	- Con perro guardián............
+	Decir que no se puede, que no hay ninguno que soporte los al menos 22 kBytes de memoria que hacen falta
+
+-Recopilatorio de Dudas:
+	.Interrupción de la pantalla lcd cuando se espera mucho rato (cambios en la entrada RS)
+	.Problema de memoria de datos insuficiente para adaptar el sistema a un microcontrolador de gama más baja
+		(sí es posible con otros de la gama 18, pero cambia poco la cosa)
+	.Gestión de interrupción de alarma en la placa.
+
+-Tiempos estimados para el desarrollo
+	una semana
+	Finalmente ha sido casi toda la navidad (unas dos semanas)
+
+-Cambiar todos los int flags por int1
+
+-Se supone que los sensores tienen una dirección de ROM fijada por fábrica para que el sensor que primero se
+encuentre corresponda a la habitación 1.
+
+============================================================================
+=============================================================================
+=============================================================================
+-BASURILLA:
+
+   int flag=0;
+
+   char c;
+char weekday[10];
+ //////// El tipo de estructura date_time_t
+                      // está definido en PCF8583.c
+
+   int wdatos [4]={'p',58,92,3};
+   int rdatos [4];
+   
+
+   //Establecemos entradas y salidas
+   set_tris_a(0x2C);
+   set_tris_d(0x0F);
+   /*
+   char key;
+   lcd_init();
+   enable_interrupts(INT_EXT);
+   enable_interrupts(GLOBAL);
+   //Configurado perro guardián para 8.192 segundos
+   setup_wdt(WDT_ON);
+
+   sleep();
+
+   setup_wdt(WDT_OFF);
+
+
+
+   motor=0; //Apagamos el motor
+
+   caldera_encendida=1;
+
+   leer_temperatura();
+   mostrar_lcd();
+
+   while(1){
+      key=get_key();
+      if(key){
+         lcd_gotoxy(1,1);
+         lcd_putc(key);
+      }
+
+   }
+   */
+
+   /*TESTEO DE TERMOSTATO
+   caldera_encendida=0;
+   ds1820_establecer_TH_TL(60,2);
+
+
+   while(1){
+        flag = ds1820_termostato();
+        if(flag)
+           caldera_encendida=1;
+        else
+           caldera_encendida=0;
+   }
+   */
+
+   /*COMPARADOR AD
+   setup_comparator(A0_A3_A1_A2);
+
+   while(1){
+      if(C1OUT)
+         //Temperatura inicio > temp caldera. No podemos mover el agua
+         //OJO! si son iguales también se toma esta opción
+         caldera_encendida=1;
+      else
+         caldera_encendida=0;
+   }
+   */
+
+/*
+   graba_ee(8,4,wdatos);
+   lee_ee(8,4,rdatos);
+   representar(rdatos, sizeof(rdatos));
+
+   lcd_init();
+
+   enable_interrupts(INT_EXT);
+   enable_interrupts(GLOBAL);
+
+   while(1){
+   }
+*/
+
+/*
+      dt.month   = 12;    // December
+      dt.day     = 31;    // 31
+      dt.year    = 06;    // 2006
+      dt.hours   = 23;    // 23 hours (11pm in 24-hour time)
+      dt.minutes = 59;    // 59 minutes
+      dt.seconds = 50;    // 50 seconds
+      dt.weekday = 0;     // 0 = Sunday, 1 = Monday, etc.
+
+      //PCF8583_set_datetime(&dt); ////------------Puesta en fecha-hora
+
+   PCF8583_init();
+
+   lcd_init();
+   lcd_send_byte(0, 1); //Borra LCD
+// lcd_send_byte(0, 2); //Posición inicial
+
+
+// Read the date and time from the PCF8583 and display
+// it once per second (approx.) on the LCD.
+*/
+/*   
+   PCF8583_read_datetime(&dt); ////-------------Lectura del RTC
+
+   strcpy(weekday, weekday_names[dt.weekday]);  // ptr=strncpy (s1, s2,  n)
+                                                // Copy up to n characters s2->s1
+
+   PCF8583_establecer_alarma(dt.hours, dt.minutes, dt.seconds+3);
+   
+   enable_interrupts(INT_EXT1);
+   enable_interrupts(GLOBAL);
+   
+   delay_ms(5000);
+   
+   
+   dt.day=dt.day+1;
+   dt.seconds=dt.seconds+20;
+   PCF8583_set_datetime(&dt);
+   
+   
+   while(1){
+   }
+   */
+
+
+RUTINAS:
+
+void leer_temperatura(){
+   temperatura=ds1820_read();
+
+}
+
+void mostrar_lcd(){
+   lcd_send_byte(0,1); //Borramos la pantalla
+   lcd_gotoxy(1,1);
+   printf(lcd_putc,"TEMP: %3.1f ", temperatura);
+   lcd_putc(223);
+   lcd_putc("C    ");
+}
+
+
+INTERRUPCIONES:
+
+#INT_EXT
+activacion_led(){
+   caldera_encendida = !caldera_encendida;
+   lcd_send_byte(LCD_ORDEN,LCD_APAGAR);
+
+}
+
+#INT_EXT1
+alarma(){
+   caldera_encendida = !caldera_encendida;
+   printf("Salta!!");
+   /*
+   restart_wdt();
+   delay_ms(1000);
+   restart_wdt();
+   */
+   PCF8583_establecer_alarma(dt.hours+2,dt.minutes, dt.seconds);
+   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+ printf("********************************************************************************************************************\r);
+                  //printf("              Tiempo medio de encendido del sistema (min x dia)     Tiempo medio de encendido de la caldera (min x dia)\r");
+                  printf("ENERO                              %f                                                     %f\r", media_annos[contador][0], media_annos_caldera[contador][0]);
+                  printf("FEBRERO                            %f                                                     %f\r", media_annos[contador][1], media_annos_caldera[contador][1]);
+                  printf("MARZO                              %f                                                     %f\r", media_annos[contador][2], media_annos_caldera[contador][2]);
+                  printf("ABRIL                              %f                                                     %f\r", media_annos[contador][3], media_annos_caldera[contador][3]);
+                  printf("MAYO                               %f                                                     %f\r", media_annos[contador][4], media_annos_caldera[contador][4]);
+                  printf("JUNIO                              %f                                                     %f\r", media_annos[contador][5], media_annos_caldera[contador][5]);
+                  printf("JULIO                              %f                                                     %f\r", media_annos[contador][6], media_annos_caldera[contador][6]);
+                  printf("AGOSTO                             %f                                                     %f\r", media_annos[contador][7], media_annos_caldera[contador][7]);
+                  printf("SEPTIEMBRE                         %f                                                     %f\r", media_annos[contador][8], media_annos_caldera[contador][8]);
+                  printf("OCTUBRE                            %f                                                     %f\r", media_annos[contador][9], media_annos_caldera[contador][9]);
+                  printf("NOVIEMBRE                          %f                                                     %f\r", media_annos[contador][10], media_annos_caldera[contador][10]);
+                  printf("DICIEMBRE                          %f                                                     %f\r", media_annos[contador][11], media_annos_caldera[contador][11]);
+                  printf("********************************************************************************************************************\r);

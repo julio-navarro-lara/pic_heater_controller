@@ -1,0 +1,49 @@
+[PROJECT]
+Target=proyecto1.HEX
+Development_Mode=2
+Processor=0x4520
+ToolSuite=CCS
+
+[Directories]
+Include=
+Library=
+LinkerScript=
+
+[Target Data]
+FileList=E:\programming\sed\Proyecto 1\proyecto1.c
+BuildTool=C-COMPILER
+OptionString=+FH
+AdditionalOptionString=
+BuildRequired=1
+
+[proyecto1.c]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+
+[mru-list]
+1=E:\PROGRA~2\sed\PROYEC~1\PROYEC~1.C
+
+[Windows]
+0=0000 E:\PROGRA~2\sed\PROYEC~1\PROYEC~1.C 0 0 796 451 3 0
+
+[Opened Files]
+1=E:\programming\sed\Proyecto 1\proyecto1.c
+2=E:\programming\sed\practica8\Practica_8\RTC_test.c
+3=
+4=E:\programming\sed\Proyecto 1\PCF8583.c
+5=E:\programming\sed\practica5\p5-e3.c
+6=E:\programming\sed\practica4\bus1.c
+7=E:\programming\sed\Proyecto 1\eeprom.c
+8=C:\Program Files\PICC\drivers\ctype.h
+9=E:\programming\sed\Proyecto 1\LCDeasy.c
+10=E:\programming\sed\Proyecto 1\proyecto1.h
+11=E:\programming\sed\practica7\Ejercicio1(desplazamiento).c
+12=E:\programming\sed\practica8\Practica_8\RTC_test.c
+13=
+[Units]
+Count=1
+1=E:\programming\sed\Proyecto 1\proyecto1.c (main)

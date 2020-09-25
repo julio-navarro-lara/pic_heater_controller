@@ -1,0 +1,48 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @SCRATCH
+006     @delay_ms1.P1
+006     main.@SCRATCH
+007     @delay_us1.P1
+F80     port_a
+F80.4   motor
+F83     PSP_DATA
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2_LOW
+FBB-FBC CCP_2
+FBC     CCP_2_HIGH
+FBE-FBF CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+
+0004  @delay_ms1
+0036  @delay_us1
+0056  main
+0056  @cinit
+
+Project Files:
+    E:\programming\sed\Proyecto 1\prueba.c
+    E:\programming\sed\Proyecto 1\18F4520.H
+
+Units:
+    E:\programming\sed\Proyecto 1\prueba.c (main)
+
+Compiler Settings:
+    Processor:      PIC18F4520
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: 1,8,16
+
+Output Files:
+    Errors:      E:\programming\sed\Proyecto 1\prueba.err
+    INHX32:      E:\programming\sed\Proyecto 1\prueba.hex
+    Symbols:     E:\programming\sed\Proyecto 1\prueba.sym
+    List:        E:\programming\sed\Proyecto 1\prueba.lst
+    Debug/COFF:  E:\programming\sed\Proyecto 1\prueba.cof
+    Call Tree:   E:\programming\sed\Proyecto 1\prueba.tre
+    Statistics:  E:\programming\sed\Proyecto 1\prueba.sta

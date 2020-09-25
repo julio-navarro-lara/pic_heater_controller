@@ -1,0 +1,119 @@
+CCS PCH C Compiler, Version 3.249, 28193               24-dic-09 14:23
+
+               Filename: E:\programming\sed\Proyecto 1\prueba.lst
+
+               ROM used: 150 bytes (0%)
+                         Largest free fragment is 32618
+               RAM used: 6 (0%) at main() level
+                         7 (0%) worst case
+               Stack:    1 locations
+
+*
+0000:  GOTO   0056
+.................... #include "18F4520.H" 
+.................... //////// Standard Header file for the PIC18F4520 device //////////////// 
+.................... #DEVICE PIC18F4520 //Aunque el convertidor A/D es de 10 bits, con esta directiva   
+....................                   //fijamos que el valor leído esté representado con 8 bits 
+....................                   //(es decir de 00 a FF). 
+....................                   //Para cambiar el rango de salida usamos: ADC=10 (000 a 3FF) 
+....................                   //                                      ó ADC=16 (0000 a FFC0)  
+.................... #list 
+....................  
+....................  
+.................... #use delay(clock=8000000, restart_wdt) 
+0004:  CLRF   FEA
+0006:  MOVLW  06
+0008:  MOVWF  FE9
+000A:  MOVF   FEF,W
+000C:  BZ    0032
+000E:  MOVLW  02
+0010:  MOVWF  01
+0012:  MOVLW  BF
+0014:  MOVWF  00
+0016:  CLRWDT
+0018:  DECFSZ 00,F
+001A:  BRA    0016
+001C:  DECFSZ 01,F
+001E:  BRA    0012
+0020:  MOVLW  96
+0022:  MOVWF  00
+0024:  DECFSZ 00,F
+0026:  BRA    0024
+0028:  NOP   
+002A:  NOP   
+002C:  CLRWDT
+002E:  DECFSZ FEF,F
+0030:  BRA    000E
+0032:  GOTO   0084 (RETURN)
+0036:  MOVLW  09
+0038:  SUBWF  07,F
+003A:  BNC   0052
+003C:  CLRF   FEA
+003E:  MOVLW  07
+0040:  MOVWF  FE9
+0042:  BCF    FD8.0
+0044:  RRCF   FEF,F
+0046:  MOVF   FEF,W
+0048:  BZ    0052
+004A:  BRA    004E
+004C:  CLRWDT
+004E:  DECFSZ FEF,F
+0050:  BRA    004C
+0052:  GOTO   008E (RETURN)
+....................  
+.................... #use fast_io(A) 
+.................... #use fast_io(B) 
+.................... #use fast_io(C) 
+.................... #use fast_io(D) 
+....................  
+.................... #byte port_a = 0xF80 
+....................  
+.................... #bit motor = 0xF80.4 
+....................  
+....................  
+.................... void main() 
+.................... { 
+0056:  CLRF   FF8
+0058:  BCF    FD0.7
+005A:  CLRF   FEA
+005C:  CLRF   FE9
+005E:  MOVF   FC1,W
+0060:  ANDLW  C0
+0062:  IORLW  0F
+0064:  MOVWF  FC1
+0066:  MOVLW  07
+0068:  MOVWF  FB4
+....................    setup_adc_ports(NO_ANALOGS); 
+006A:  MOVF   FC1,W
+006C:  ANDLW  C0
+006E:  IORLW  0F
+0070:  MOVWF  FC1
+....................    set_tris_a(0x0); 
+0072:  MOVLW  00
+0074:  MOVWF  F92
+....................  
+....................    output_bit(PIN_A4,1); 
+0076:  BSF    F89.4
+....................    output_a(0b11111111); 
+0078:  MOVLW  FF
+007A:  MOVWF  F89
+....................  
+....................    delay_us(10000); 
+007C:  CLRWDT
+007E:  MOVLW  09
+0080:  MOVWF  06
+0082:  BRA    0004
+0084:  MOVLW  09
+0086:  MOVWF  06
+0088:  MOVLW  6D
+008A:  MOVWF  07
+008C:  BRA    0036
+008E:  DECFSZ 06,F
+0090:  BRA    0088
+....................     
+....................    while(1){}; 
+0092:  BRA    0092
+....................  
+....................  
+.................... } 
+0094:  SLEEP 

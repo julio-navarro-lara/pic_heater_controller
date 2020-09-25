@@ -1,0 +1,178 @@
+
+ROM used: 26842 (82%)
+          26842 (82%) including unused fragments
+
+          6 Average locations per line
+          17 Average locations per statement
+
+RAM used: 94 (6%) at main() level
+          683 (44%) worst case
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+ 2170   910  56  E:\programming\sed\Proyecto 1\Prototipo 3 (presentación)\proyecto1.c
+  432     0   0  E:\programming\sed\Proyecto 1\Prototipo 3 (presentación)\18F4520.H
+   61     0   0  E:\programming\sed\Proyecto 1\Prototipo 3 (presentación)\proyecto1.h
+   28     0   0  C:\Program Files\PICC\drivers\ctype.h
+  874   389  15  C:\Program Files\PICC\drivers\stdlib.h
+   28     0   0  C:\Program Files\PICC\drivers\stddef.h
+  417   126   4  C:\Program Files\PICC\drivers\string.h
+  285    74   2  E:\programming\sed\Proyecto 1\Prototipo 3 (presentación)\PCF8583.c
+  187    58   2  E:\programming\sed\Proyecto 1\Prototipo 3 (presentación)\LCDeasy.c
+   63    22   1  E:\programming\sed\Proyecto 1\Prototipo 3 (presentación)\1wire.c
+  105    47   1  E:\programming\sed\Proyecto 1\Prototipo 3 (presentación)\ds1820.c
+----- -----
+ 9300  3252 Total
+
+Page ROM  %  RAM  Functions:
+---- --- --- ---  ----------
+0     48   0   1  @delay_ms1
+0     30   0   1  @delay_us1
+0     76   0   2  @MUL88
+0     30   0   5  @MUL1616
+0    248   0  11  @MULFF
+0     56   0   2  @ITOF
+0    634   1  16  @ADDFF
+0    352   1  14  @DIVFF
+0    410   1   9  atoi
+0     70   0   5  @DIV1616
+0     88   0   3  @I2C_READ_1_31763_31764_8000000
+0     94   0   1  @I2C_WRITE_1_31763_31764_8000000
+0     80   0   2  PCF8583_write_byte
+0    130   0   2  PCF8583_read_byte
+0     32   0   2  bin2bcd
+0     38   0   3  bcd2bin
+0    326   1  10  PCF8583_set_datetime
+0    442   1  12  PCF8583_read_datetime
+0     30   0   0  @const378
+0     30   0   1  lcd_send_nibble
+0     64   0   3  lcd_send_byte
+0     74   0   3  lcd_init
+0     34   0   4  lcd_gotoxy
+0     68   0   1  lcd_putc
+0     42   0   1  onewire_reset
+0     62   0   2  onewire_write
+0     72   0   2  onewire_read
+0    174   0  13  ds1820_read
+0     76   0   2  @SITOF
+0    206   0  17  ds1820_establecer_TH_TL
+0     58   0   4  @SFTOI
+0    172   0   3  ds1820_termostato
+0     10   0   0  activacion_led
+0   3622   7   6  main
+0     44   0   0  @const11490
+0     60   0   0  @const11502
+0     54   0   0  @const11527
+0     50   0   0  @const11546
+0     56   0   0  @const11560
+0     44   0   3  @DIV88
+0    216   0   6  @PRINTF_D_678
+0     52   0   0  @const11635
+0     56   0   0  @const11673
+0     66   0   5  @FTOSD
+0    130   0  13  @DIV3232
+0    400   1  13  @PRINTF_L32D_678FPFPF
+0     44   0   0  @const11713
+0    118   0  10  @FLT
+0     52   0   0  @const11731
+0     46   0   0  @const11747
+0     44   0   0  @const11760
+0     52   0   0  @const11789
+0     54   0   0  @const11828
+0     44   0   0  @const11835
+0     54   0   0  @const11867
+0     48   0   0  @const11879
+0     48   0   0  @const12006
+0     44   0   0  @const12012
+0     54   0   0  @const12045
+0     64   0   3  apagar_caldera
+0   1074   2  12  apagar_sistema
+0    550   1  10  buscar_numero
+0     28   0   0  @const12123
+0    118   0   3  buscar_numero_rs232
+0    496   1  12  comp_caldera
+0     52   0   4  comprobar_hora
+0    232   0   0  comprobar_temperatura
+0    236   0  14  diferencia_tiempo
+0    338   1  18  diferencia_tiempo_sec
+0     28   0   0  encender_caldera
+0     40   0   0  encender_sistema
+0    364   1  13  grabar_programaciones
+0   1450   3  10  inicializacion
+0     56   0   0  @const12378
+0     54   0   0  @const12384
+0     82   0   0  @const12390
+0     46   0   0  @const12405
+0     46   0   0  @const12412
+0     46   0   0  @const12419
+0     46   0   0  @const12426
+0     46   0   0  @const12433
+0     46   0   0  @const12440
+0     46   0   0  @const12447
+0     50   0   0  @goto12453
+0     36   0   0  @const12457
+0     58   0   0  @const12466
+0     74   0   0  @const12478
+0     28   0   0  @const12486
+0     74   0   0  @const12507
+0     76   0   0  @const12530
+0     74   0   0  @const12560
+0     82   0   0  @const12575
+0     34   0   0  @const12596
+0     60   0   0  @const12605
+0     46   0   0  @const12616
+0     28   0   0  @const12624
+0     50   0   0  @const12644
+0     54   0   0  @const12653
+0     50   0   0  @const12664
+0    206   0   2  mostrar_temperatura
+0     52   0   0  @const12686
+0    120   0   2  @PRINTF_U_678
+0    312   1  16  ordenar_programaciones
+0     62   0   4  programar_proxima_alarma
+0   6916  13 546  representar_registros
+0     48   0   0  @const12803
+0     48   0   0  @const12809
+0     74   0   0  @const12815
+0     74   0   0  @const12821
+0     28   0   0  @const12867
+0    130   0   2  @PRINTF_U_4800_31766_31767
+0     74   0   0  @const13026
+0     58   0   0  @const13032
+0     36   0   0  @const13038
+0     62   0   0  @const13044
+0     54   0   0  @const13050
+0     54   0   0  @const13056
+0     74   0   0  @const13062
+0     40   0   0  @const13084
+0     80   0   0  @const13091
+0    426   1  13  @PRINTF_L32D_4800_31766_31767FPFPF
+0     78   0   0  @const13114
+0     70   0   0  @const13122
+0    170   0   9  @PRINTF_LU_4800_31766_31767
+0     68   0   0  @const13147
+0     30   0   0  @const13162
+0     82   0   0  @const13180
+0     82   0   0  @const13186
+0     44   0   0  @const13192
+0     46   0   0  @const13202
+0     44   0   0  @const13212
+0     44   0   0  @const13222
+0     42   0   0  @const13232
+0     44   0   0  @const13242
+0     44   0   0  @const13252
+0     44   0   0  @const13262
+0     48   0   0  @const13272
+0     46   0   0  @const13282
+0     48   0   0  @const13292
+0     48   0   0  @const13302
+0     44   0   0  @goto13319
+0    130   0   7  seleccionar_alarma
+
+ Segment   Used  Free
+---------  ----  ----
+00000-00002     4  0  
+00004-00006     0  4  
+00008-0009A   148  0  
+0009C-07FFE  26690  5922  
+

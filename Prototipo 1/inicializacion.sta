@@ -1,0 +1,36 @@
+
+ROM used: 408 (1%)
+          408 (1%) including unused fragments
+
+          0 Average locations per line
+          2 Average locations per statement
+
+RAM used: 25 (2%) at main() level
+          35 (2%) worst case
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   70    17   6  E:\programming\sed\Proyecto 1\inicializacion.c
+  432     0   0  E:\programming\sed\Proyecto 1\18F4520.H
+   55     0   0  E:\programming\sed\Proyecto 1\proyecto1.h
+  329    90  32  E:\programming\sed\Proyecto 1\PCF8583.c
+  187    58  15  E:\programming\sed\Proyecto 1\LCDeasy.c
+   63    22   5  E:\programming\sed\Proyecto 1\1wire.c
+   79    32   7  E:\programming\sed\Proyecto 1\ds1820.c
+   72    24   5  E:\programming\sed\Proyecto 1\teclado.c
+   62    25   5  E:\programming\sed\Proyecto 1\eeprom.c
+----- -----
+ 2698   536 Total
+
+Page ROM  %  RAM  Functions:
+---- --- --- ---  ----------
+0     94  12   1  @I2C_WRITE_1_31763_31764_8000000
+0    142  17   9  graba_ee
+0    136  17  19  main
+0     32   4   5  @MUL1616
+
+ Segment   Used  Free
+---------  ----  ----
+00000-00002     4  0  
+00004-07FFE   404  32360  
+

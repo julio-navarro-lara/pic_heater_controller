@@ -1,0 +1,33 @@
+
+ROM used: 56 (0%)
+          56 (0%) including unused fragments
+
+          0 Average locations per line
+          0 Average locations per statement
+
+RAM used: 48 (3%) at main() level
+          48 (3%) worst case
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  138     5   2  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.c
+  432     0   0  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\18F4520.H
+   66     0   0  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\proyecto1.h
+  331    90  29  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\PCF8583.c
+  187    58  14  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\LCDeasy.c
+  108    47  10  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\1wire.c
+  207    60  12  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\ds1820.c
+   82    24   4  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\teclado.c
+   68    25   4  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\eeprom.c
+----- -----
+ 3238   618 Total
+
+Page ROM  %  RAM  Functions:
+---- --- --- ---  ----------
+0     52  46  42  main
+
+ Segment   Used  Free
+---------  ----  ----
+00000-00002     4  0  
+00004-07FFE    52  32712  
+

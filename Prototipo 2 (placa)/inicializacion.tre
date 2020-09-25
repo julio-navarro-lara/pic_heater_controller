@@ -1,0 +1,33 @@
+ÀÄinicializacion
+   ÀÄmain  0/90  Ram=12
+      ÃÄ??0??
+      ÃÄds1820_establecer_TH_TL  0/198  Ram=17
+      ³  ÃÄonewire_reset  0/42  Ram=1
+      ³  ³  ÃÄ@delay_us1  0/30  Ram=1
+      ³  ³  ÀÄ@delay_us1  0/30  Ram=1
+      ³  ÃÄonewire_write  0/62  Ram=2
+      ³  ÃÄonewire_write  0/62  Ram=2
+      ³  ÃÄ@MULFF  0/244  Ram=11
+      ³  ÃÄ@MULFF  0/244  Ram=11
+      ³  ÃÄ@SFTOI  0/58  Ram=4
+      ³  ÃÄonewire_write  0/62  Ram=2
+      ³  ÃÄ@SFTOI  0/58  Ram=4
+      ³  ÃÄonewire_write  0/62  Ram=2
+      ³  ÃÄonewire_reset  0/42  Ram=1
+      ³  ³  ÃÄ@delay_us1  0/30  Ram=1
+      ³  ³  ÀÄ@delay_us1  0/30  Ram=1
+      ³  ÃÄonewire_write  0/62  Ram=2
+      ³  ÃÄonewire_write  0/62  Ram=2
+      ³  ÃÄ@delay_ms1  0/50  Ram=1
+      ³  ÀÄ@delay_us1  0/30  Ram=1
+      ÀÄds1820_termostato  0/164  Ram=3
+         ÃÄonewire_reset  0/42  Ram=1
+         ³  ÃÄ@delay_us1  0/30  Ram=1
+         ³  ÀÄ@delay_us1  0/30  Ram=1
+         ÃÄonewire_write  0/62  Ram=2
+         ÃÄonewire_write  0/62  Ram=2
+         ÃÄonewire_read  0/74  Ram=2
+         ÃÄonewire_reset  0/42  Ram=1
+         ³  ÃÄ@delay_us1  0/30  Ram=1
+         ³  ÀÄ@delay_us1  0/30  Ram=1
+         ÀÄonewire_write  0/62  Ram=2

@@ -1,0 +1,28 @@
+
+ROM used: 150 (0%)
+          150 (0%) including unused fragments
+
+          0 Average locations per line
+          19 Average locations per statement
+
+RAM used: 6 (0%) at main() level
+          7 (0%) worst case
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+   29     8 100  E:\programming\sed\Proyecto 1\prueba.c
+  432     0   0  E:\programming\sed\Proyecto 1\18F4520.H
+----- -----
+  922    16 Total
+
+Page ROM  %  RAM  Functions:
+---- --- --- ---  ----------
+0     50  17   1  @delay_ms1
+0     32  11   1  @delay_us1
+0     64  21   1  main
+
+ Segment   Used  Free
+---------  ----  ----
+00000-00002     4  0  
+00004-07FFE   146  32618  
+

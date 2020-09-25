@@ -1,0 +1,97 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @SCRATCH
+006-00C main.tiempo
+00D     main.termostato
+00E     main.num_intervalos
+00F     main.num_registros
+010     main.anno_actual
+011     main.anno_actual_0_to_3
+012     ds1820_termostato.busy
+012-015 ds1820_establecer_TH_TL.th
+013.0   ds1820_termostato.bit1
+013.1   ds1820_termostato.bit2
+014     onewire_read.count
+014     ds1820_termostato.@SCRATCH
+015     onewire_read.data
+016-019 ds1820_establecer_TH_TL.tl
+01A-01D ds1820_establecer_TH_TL.th2
+01E-021 ds1820_establecer_TH_TL.tl2
+022-025 @SFTOI.P1
+022-025 @MULFF.P2
+022     @delay_ms1.P3
+022     onewire_reset.@SCRATCH
+022     ds1820_establecer_TH_TL.@SCRATCH
+023     @delay_us1.P1
+023     onewire_write.data
+024     onewire_write.count
+026-029 @MULFF.P1
+02A     @MULFF.@SCRATCH
+02B     @MULFF.@SCRATCH
+02C     @MULFF.@SCRATCH
+F80     port_a
+F81     port_b
+F81     lcd
+F81.2   lcd_rs
+F82.0   menos
+F82     port_c
+F82.1   si
+F83     port_d
+F83.0   mas
+F83     PSP_DATA
+F83.1   no
+F83.5   sistema_encendido
+F83.6   motor
+F83.7   caldera_encendida
+F84     port_e
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB     CCP_2_LOW
+FBB-FBC CCP_2
+FBC     CCP_2_HIGH
+FBE     CCP_1_LOW
+FBE-FBF CCP_1
+FBF     CCP_1_HIGH
+
+01B8  @delay_ms1
+0004  @delay_us1
+0022  onewire_reset
+004C  onewire_write
+02B0  onewire_read
+01EA  ds1820_establecer_TH_TL
+008A  @MULFF
+017E  @SFTOI
+02FA  ds1820_termostato
+039E  main
+039E  @cinit
+
+Project Files:
+    E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.c
+    E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\18F4520.H
+    E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\proyecto1.h
+    E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\PCF8583.c
+    E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\LCDeasy.c
+    E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\1wire.c
+    E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\ds1820.c
+
+Units:
+    E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.c (main)
+
+Compiler Settings:
+    Processor:      PIC18F4520
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: 1,8,16
+
+Output Files:
+    Errors:      E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.err
+    INHX32:      E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.hex
+    Symbols:     E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.sym
+    List:        E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.lst
+    Debug/COFF:  E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.cof
+    Call Tree:   E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.tre
+    Statistics:  E:\programming\sed\Proyecto 1\Prototipo 2 (placa)\inicializacion.sta

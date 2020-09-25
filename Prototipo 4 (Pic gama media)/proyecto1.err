@@ -1,0 +1,6 @@
+>>> Warning 203 "E:\programming\sed\Proyecto 1\Prototipo 4 (Pic gama media)\PCF8583.c" Line 100(1,1): Condition always TRUE
+>>> Warning 203 "proyecto1.c" Line 213(1,1): Condition always TRUE
+>>> Warning 203 "proyecto1.c" Line 336(1,1): Condition always TRUE
+>>> Warning 203 "proyecto1.c" Line 765(1,1): Condition always TRUE
+      Memory usage:   ROM=99%      RAM=20% - 40%
+      0 Errors,  4 Warnings.

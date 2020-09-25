@@ -1,0 +1,77 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @SCRATCH
+005     alarma_activada
+006-00C main.tiempo
+00D     main.termostato
+00E     main.num_intervalos
+00F-010 main.num_registros
+011     main.anno_actual
+012     main.anno_actual_1_to_3
+013-018 main.data
+019-01C main.temperatura
+01D     main.count
+01E     main.m
+01F.0   main.bit
+020-027 main.dir1
+028-02F main.dir2
+F80     port_a
+F81     port_b
+F81     lcd
+F81.2   lcd_rs
+F81.4   teclado1
+F81.5   teclado2
+F81.6   teclado3
+F81.7   teclado4
+F82     port_c
+F83     port_d
+F83     PSP_DATA
+F83.5   sistema_encendido
+F83.6   motor
+F83.7   caldera_encendida
+F84     port_e
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB-FBC CCP_2
+FBB     CCP_2_LOW
+FBC     CCP_2_HIGH
+FBE-FBF CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+
+0004  main
+0004  @cinit
+0136  hecho
+
+Project Files:
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.c
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\18F4520.H
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\proyecto1.h
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\PCF8583.c
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\LCDeasy.c
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\1wire.c
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\ds1820.c
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\teclado.c
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\eeprom.c
+
+Units:
+    E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.c (main)
+
+Compiler Settings:
+    Processor:      PIC18F4520
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: 1,8,16
+
+Output Files:
+    Errors:      E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.err
+    INHX32:      E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.hex
+    Symbols:     E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.sym
+    List:        E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.lst
+    Debug/COFF:  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.cof
+    Call Tree:   E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.tre
+    Statistics:  E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.sta

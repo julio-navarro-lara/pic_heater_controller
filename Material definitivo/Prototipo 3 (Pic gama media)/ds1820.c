@@ -1,0 +1,100 @@
+
+/***************************************************/
+/*Driver básico del termómetro/termostato ds1820.c */
+//
+//Realiza una secuencia completa de incialización, conversión
+//de temperatura, y lectura del (único) sensor de temperatura
+//con alimentación externa (no parásita).
+//
+/***************************************************/
+
+float ds1820_read()
+{
+ int8 busy=0, temp1, temp2;
+ signed int16 temp3;
+ float result;
+
+ onewire_reset();     // Cada acceso al sensor debe iniciarse con reset
+ onewire_write(0xCC); //Instrucción SKIP ROM (selecciona todos los dispositivos del 1wire)
+ onewire_write(0x44); //Orden de inicio de conversión de temperatura
+
+ while (busy == 0)    //el sensor mantiene la linea a 0 mientras realiza la conversión
+  busy = onewire_read(); //y la deja a 1 al completarla
+
+ onewire_reset();
+ onewire_write(0xCC);
+ onewire_write(0xBE); //Envío de la orden READ SCRATCHPAD (lectura de la memoria temporal)
+ temp1 = onewire_read(); //lectura del LSB de la temperatura
+ temp2 = onewire_read(); //lectura del MSB de la temperatura
+
+ temp3 = make16(temp2, temp1); //
+ result = (float) temp3 / 2.0;   //Calculation for DS18S20 with 0.5 deg C resolution
+// result = (float) temp3 / 16.0;  //Calculation for DS18B20 with 0.1 deg C resolution
+
+ delay_ms(200);
+ return(result);
+}
+
+//Establece la temperatura máxima y mínima para el termostato
+void ds1820_establecer_TH_TL(float th, float tl){
+   float th2, tl2;
+   onewire_reset();
+   onewire_write(0xCC); //Accedemos a todos los dispositivos
+   onewire_write(0x4E); //Envío de la orden Write Scratchpad (escritura en la memoria principal)
+   th2=2*th;
+   tl2=2*tl;
+   onewire_write((int8)th2);
+   onewire_write((int8)tl2);
+
+   //Copiamos los valores en la ROM
+   onewire_reset();
+   onewire_write(0xCC);
+   onewire_write(0x48);
+
+   //Dejamos un poco de tiempo para que se escriba en la EEPROM
+   //El tiempo ha sido calculado a partir de la simulación en Proteus
+   delay_us(10600);
+
+}
+
+//Intenta buscar la alarma del único sensor conectado por si ha saltado
+//el termostato. Si lo ha hecho, devuelve TRUE, y en caso contrario, FALSE.
+int1 ds1820_termostato(){
+   int busy=0;
+   int1 bit1, bit2;
+
+   //Primero forzamos la conversión de la temperatura
+   onewire_reset();
+   onewire_write(0xCC);
+   onewire_write(0x44);
+
+   while(busy == 0)
+      busy = onewire_read();
+
+   onewire_reset();
+   onewire_write(0xEC); //Buscamos la alarma de algún dispositivo (función ALARM SEARCH)
+
+   //Leemos dos bits consecutivos. Si el dispositivo tiene el flag de alarma activado, escribirá
+   //en la línea el bit más bajo de su dirección ROM y, después, su complemento. Si no, no hará
+   //nada. Por eso, si ambos bits leídos son diferentes, la alarma estará activada, mientras que
+   //si son iguales, no lo estarán. No es necesario continuar leyendo toda la dirección del dispositivo.
+   output_low(ONE_WIRE_PIN);
+   delay_us( 2 );
+   output_float(ONE_WIRE_PIN);
+   delay_us( 8 );
+   bit1 = input(ONE_WIRE_PIN); //Leemos el bit menos significativo de la dirección ROM
+   delay_us( 120 );
+
+   output_low(ONE_WIRE_PIN);
+   delay_us( 2 );
+   output_float(ONE_WIRE_PIN);
+   delay_us( 8 );
+   bit2 = input(ONE_WIRE_PIN); //Leemos su complemento (si la alarma está activada)
+   delay_us( 120 );
+
+   if(bit1 != bit2)
+      return TRUE;
+   else
+      return FALSE;
+}
+

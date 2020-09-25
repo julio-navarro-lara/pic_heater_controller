@@ -1,0 +1,1241 @@
+CCS PCH C Compiler, Version 3.249, 28193               18-ene-10 13:37
+
+               Filename: E:\programming\sed\Proyecto 1\Prototipo 1 optimizado\inicializacion.lst
+
+               ROM used: 56 bytes (0%)
+                         Largest free fragment is 32712
+               RAM used: 48 (3%) at main() level
+                         48 (3%) worst case
+               Stack:    0 locations
+
+*
+0000:  GOTO   0004
+.................... //**************************************************************** 
+.................... //Programa de inicialización de memoria y reloj para el PROYECTO 1 
+.................... //**************************************************************** 
+....................  
+.................... #include "18F4520.H" 
+.................... //////// Standard Header file for the PIC18F4520 device //////////////// 
+.................... #DEVICE PIC18F4520 //Aunque el convertidor A/D es de 10 bits, con esta directiva 
+....................                   //fijamos que el valor leído esté representado con 8 bits 
+....................                   //(es decir de 00 a FF). 
+....................                   //Para cambiar el rango de salida usamos: ADC=10 (000 a 3FF) 
+....................                   //                                      ó ADC=16 (0000 a FFC0) 
+.................... #list 
+....................  
+.................... #include "proyecto1.h" 
+.................... //****************************************** 
+.................... //Archivo de cabecera del Proyecto 1 
+.................... //****************************************** 
+.................... //Author: Julio Navarro Lara         2010 
+....................  
+.................... //Definimos los puertos del microcontrolador 
+.................... #byte port_a = 0xF80 
+.................... #byte port_b = 0xF81 
+.................... #byte port_c = 0xF82 
+.................... #byte port_d = 0xF83 
+.................... #byte port_e = 0xF84 
+....................  
+.................... #bit sistema_encendido = 0xF83.5    //Pin que indica el encendido del sistema con un valor alto 
+.................... #bit motor = 0xF83.6                //Pin que indica el encendido del motor de circulación del agua con un valor alto 
+.................... #bit caldera_encendida = 0xF83.7    //Pin que indica el encendido de la caldera con un valor alto 
+.................... #bit teclado1 = 0xF81.4             //Pines para gestionar la entrada del teclado 
+.................... #bit teclado2 = 0xF81.5             //'' 
+.................... #bit teclado3 = 0xF81.6             //'' 
+.................... #bit teclado4 = 0xF81.7             //'' 
+.................... #bit lcd_rs   = 0xF81.2             //Pin que controla la entrada RS de la pantalla LCD 
+....................  
+.................... //Parámetros de la pantalla LCD 
+.................... #define LCD_ORDEN       0    //Código para enviar un orden 
+.................... #define LCD_DATO        1    //Código para enviar un dato 
+....................  
+.................... #define LCD_CLEAR       0x01  //Orden para borrar la pantalla 
+.................... #define LCD_NO_CURSOR   0x0C  //Orden para eliminar el cursor de la pantalla 
+.................... #define LCD_CURSOR      0x0E  //Orden para visualizar el cursor en la pantalla 
+.................... #define LCD_APAGAR      0x08  //Orden para apagar la pantalla 
+....................  
+.................... //Tiempo que se mantienen los mensajes temporales en pantalla (ms) 
+.................... #define LCD_T_RETARDO   500 
+....................  
+.................... //Clave de acceso 
+.................... #define clave           2401 
+....................  
+....................  
+.................... //Parámetros del teclado 
+.................... #define NUM_COLUMNAS 3     //Número de columnas del teclado matricial 
+.................... #define NUM_FILAS    4     //Número de filas del teclado matricial 
+.................... #define NO           100  //Codificación del NO en el método buscar_numero() 
+.................... #define SI           101  //Codificación del SI en el método buscar_numero() 
+....................  
+.................... //Parámetros del conversor AD 
+.................... #define termostato_caldera   3   //Entrada AD que se refiere a la temperatura de referencia de la caldera 
+.................... #define temperatura_caldera  0   //Entrada AD que se refiere a la temperatura del agua en la caldera 
+.................... #define histeresis_caldera   5   //Diferencia de histéresis para el agua de la caldera 
+.................... #define t_max_caldera        70  //Temperatura máxima a la que puede regularse la caldera 
+.................... #define t_min_caldera        25  //Temperatura mínima a la que puede regularse la caldera 
+.................... #define AD_num_valores       255 //Número de valores de escala del conversor (sensibilidad de los potenciómetros) 
+....................  
+.................... //Parámetros de control de temperatura 
+.................... //Datos suministrados por el aparato de aire acondicionado (con bomba de calor) de mi casa 
+.................... #define temp_max          32  //Temperatura máxima de regulación del termostato 
+.................... #define temp_min          16  //Temperatura mínima de regulación del termostato 
+....................  
+....................  
+.................... //Direcciones para la EEPROM 
+.................... #define eeprom_termostato        0x10  //Valor del termostato 
+.................... #define eeprom_num_intervalos    0x11  //Número de intervalos de programación de los que disponemos 
+.................... #define eeprom_num_registros     0x12  //Número de registros de desconexión de los que se disponen 
+.................... #define eeprom_anno_actual       0x14  //Año en el que nos encontramos 
+.................... #define eeprom_anno_1_to_3       0x15  //Año en el que nos encontramos medido de 0 a 3 (llamado 1_to_3 por razones "históricas") 
+.................... #define eeprom_programaciones    0x18  //Posición a partir de la cual se almacenan las programaciones de alarmas 
+.................... #define eeprom_registros         0x50  //Posición a partir de la cual se almacenan los registros 
+....................  
+.................... #fuses HS, NOPROTECT, BROWNOUT, PUT, NOLVP, NOXINST, WDT2048, NOWDT 
+.................... #use delay(clock=8000000, restart_wdt) 
+.................... #use rs232(baud=4800, xmit=PIN_C6,rcv=PIN_C7) 
+....................  
+.................... #include "PCF8583.c" 
+.................... // Funciones para el RTC I2c: PCF8583 
+.................... // Este código no procede de CCS (no está totalmente verificado) 
+.................... // Inluye funciones de conversión BCD-Binario 
+.................... // y de lectura/escritura a través de I2C. 
+....................  
+.................... //Vamos a eliminar todos los casos en los que se habiliten las interrupciones globales 
+.................... //Estas sentencias nos impedían utilizar estos métodos en las interrupciones 
+....................  
+.................... #ifndef PCF8583_SDA 
+.................... #define PCF8583_SDA  PIN_C4 
+.................... #define PCF8583_SCL  PIN_C3 
+.................... #endif 
+....................  
+.................... #use i2c(master, sda=PCF8583_SDA, scl=PCF8583_SCL) 
+....................  
+.................... #ifndef PCF8583_WRITE_ADDRESS 
+.................... #define PCF8583_WRITE_ADDRESS 0xA0 
+.................... #define PCF8583_READ_ADDRESS  0xA1 
+.................... #endif 
+....................  
+.................... // Register addresses 
+.................... #define PCF8583_CTRL_STATUS_REG    0x00 
+.................... #define PCF8583_100S_REG           0x01 
+.................... #define PCF8583_SECONDS_REG        0x02 
+.................... #define PCF8583_MINUTES_REG        0x03 
+.................... #define PCF8583_HOURS_REG          0x04 
+.................... #define PCF8583_DATE_REG           0x05 
+.................... #define PCF8583_MONTHS_REG         0x06 
+.................... #define PCF8583_TIMER_REG          0x07 
+....................  
+.................... #define PCF8583_ALARM_CONTROL_REG  0x08 
+.................... #define PCF8583_ALARM_100S_REG     0x09 
+.................... #define PCF8583_ALARM_SECS_REG     0x0A 
+.................... #define PCF8583_ALARM_MINS_REG     0x0B 
+.................... #define PCF8583_ALARM_HOURS_REG    0x0C 
+.................... #define PCF8583_ALARM_DATE_REG     0x0D 
+.................... #define PCF8583_ALARM_MONTHS_REG   0x0E 
+.................... #define PCF8583_ALARM_TIMER_REG    0x0F 
+....................  
+.................... // Use the first NVRAM address for the year byte. 
+.................... #define PCF8583_YEAR_REG           0x10 
+....................  
+....................  
+.................... // Commands for the Control/Status register. 
+.................... #define PCF8583_START_COUNTING     0x00 
+.................... #define PCF8583_STOP_COUNTING      0x80 
+.................... #define PCF8583_ACTIVAR_ALARMA     0b00000100  //Palabra de activación de la alarma 
+.................... #define PCF8583_DEFINIR_ALARMA     0b10010000  //Palabra para definir el comportamiento 
+....................                                                //de la alarma en su registro 
+....................  
+.................... #define PCF8583_DESACTIVAR_INT     0b00010000 
+....................  
+....................  
+.................... int8 alarma_activada=0; 
+....................  
+....................  
+.................... char const weekday_names[7][10] = 
+.................... { 
+.................... {"DOM"}, 
+.................... {"LUN"}, 
+.................... {"MAR"}, 
+.................... {"MIE"}, 
+.................... {"JUE"}, 
+.................... {"VIE"}, 
+.................... {"SAB"} 
+.................... }; 
+....................  
+.................... // This structure defines the user's date and time data. 
+.................... // The values are stored as unsigned integers.  The user 
+.................... // should declare a structure of this type in the application 
+.................... // program. Then the address of the structure should be 
+.................... // passed to the PCF8583 read/write functions in this 
+.................... // driver, whenever you want to talk to the chip. 
+.................... typedef struct 
+.................... { 
+.................... int8 seconds;    // 0 to 59 
+.................... int8 minutes;    // 0 to 59 
+.................... int8 hours;      // 0 to 23  (24-hour time) 
+.................... int8 day;        // 1 to 31 
+.................... int8 month;      // 1 to 12 
+.................... int8 year;       // 00 to 99 
+.................... int8 weekday;    // 0 = Sunday, 1 = Monday, etc. 
+.................... }date_time_t; 
+....................  
+....................  
+.................... //---------------------------------------------- 
+.................... void PCF8583_write_byte(int8 address, int8 data) 
+.................... { 
+.................... disable_interrupts(GLOBAL); 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_WRITE_ADDRESS); 
+.................... i2c_write(address); 
+.................... i2c_write(data); 
+.................... i2c_stop(); 
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... int8 PCF8583_read_byte(int8 address) 
+.................... { 
+.................... int8 retval; 
+....................  
+.................... disable_interrupts(GLOBAL); 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_WRITE_ADDRESS); 
+.................... i2c_write(address); 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_READ_ADDRESS); 
+.................... retval = i2c_read(0); 
+.................... i2c_stop(); 
+....................  
+.................... return(retval); 
+.................... } 
+....................  
+....................  
+.................... void PCF8583_init(void) 
+.................... { 
+.................... PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_START_COUNTING); 
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... // This function converts an 8 bit binary value 
+.................... // to an 8 bit BCD value. 
+.................... // The input range must be from 0 to 99. 
+....................  
+.................... int8 bin2bcd(int8 value) 
+.................... { 
+.................... char retval; 
+....................  
+.................... retval = 0; 
+....................  
+.................... while(1) 
+....................   { 
+....................    // Get the tens digit by doing multiple subtraction 
+....................    // of 10 from the binary value. 
+....................    if(value >= 10) 
+....................      { 
+....................       value -= 10; 
+....................       retval += 0x10; 
+....................      } 
+....................    else // Get the ones digit by adding the remainder. 
+....................      { 
+....................       retval += value; 
+....................       break; 
+....................      } 
+....................    } 
+....................  
+.................... return(retval); 
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... // This function converts an 8 bit BCD value to 
+.................... // an 8 bit binary value. 
+.................... // The input range must be from 00 to 99. 
+....................  
+.................... char bcd2bin(char bcd_value) 
+.................... { 
+.................... char temp; 
+....................  
+.................... temp = bcd_value; 
+....................  
+.................... // Shifting the upper digit right by 1 is 
+.................... // the same as multiplying it by 8. 
+.................... temp >>= 1; 
+....................  
+.................... // Isolate the bits for the upper digit. 
+.................... temp &= 0x78; 
+....................  
+.................... // Now return: (Tens * 8) + (Tens * 2) + Ones 
+.................... return(temp + (temp >> 2) + (bcd_value & 0x0f)); 
+....................  
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... void PCF8583_set_datetime(date_time_t *dt) 
+.................... { 
+.................... int8 bcd_sec; 
+.................... int8 bcd_min; 
+.................... int8 bcd_hrs; 
+.................... int8 bcd_day; 
+.................... int8 bcd_mon; 
+....................  
+.................... // Convert the input date/time into BCD values 
+.................... // that are formatted for the PCF8583 registers. 
+.................... bcd_sec = bin2bcd(dt->seconds); 
+.................... bcd_min = bin2bcd(dt->minutes); 
+.................... bcd_hrs = bin2bcd(dt->hours); 
+.................... bcd_day = bin2bcd(dt->day) | (dt->year << 6); 
+.................... bcd_mon = bin2bcd(dt->month) | (dt->weekday << 5); 
+....................  
+.................... // Stop the RTC from counting, before we write to 
+.................... // the date and time registers. 
+.................... PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_STOP_COUNTING); 
+....................  
+.................... // Write to the date and time registers.  Disable interrupts 
+.................... // so they can't disrupt the i2c operations. 
+.................... disable_interrupts(GLOBAL); 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_WRITE_ADDRESS); 
+.................... i2c_write(PCF8583_100S_REG);   // Start at 100's reg. 
+.................... i2c_write(0x00);               // Set 100's reg = 0 
+.................... i2c_write(bcd_sec); 
+.................... i2c_write(bcd_min); 
+.................... i2c_write(bcd_hrs); 
+.................... i2c_write(bcd_day); 
+.................... i2c_write(bcd_mon); 
+.................... i2c_stop(); 
+....................  
+.................... // Write the year byte to the first NVRAM location. 
+.................... // Leave it in binary format. 
+.................... PCF8583_write_byte(PCF8583_YEAR_REG, dt->year); 
+....................  
+.................... // Now allow the PCF8583 to start counting again. 
+.................... PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_START_COUNTING); 
+.................... } 
+....................  
+.................... //---------------------------------------------- 
+.................... // Read the Date and Time from the hardware registers 
+.................... // in the PCF8583.   We don't have to disable counting 
+.................... // during read operations, because according to the data 
+.................... // sheet, if any of the lower registers (1 to 7) is read, 
+.................... // all of them are loaded into "capture" registers. 
+.................... // All further reading within that cycle is done from 
+.................... // those registers. 
+....................  
+.................... void PCF8583_read_datetime(date_time_t *dt) 
+.................... { 
+.................... int8 year_bits; 
+.................... int8 year; 
+....................  
+.................... int8 bcd_sec; 
+.................... int8 bcd_min; 
+.................... int8 bcd_hrs; 
+.................... int8 bcd_day; 
+.................... int8 bcd_mon; 
+....................  
+.................... // Disable interrupts so the i2c process is not disrupted. 
+.................... disable_interrupts(GLOBAL); 
+....................  
+.................... // Read the date/time registers inside the PCF8583. 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_WRITE_ADDRESS); 
+.................... i2c_write(PCF8583_SECONDS_REG);   // Start at seconds reg. 
+.................... i2c_start(); 
+.................... i2c_write(PCF8583_READ_ADDRESS); 
+....................  
+.................... bcd_sec = i2c_read(); 
+.................... bcd_min = i2c_read(); 
+.................... bcd_hrs = i2c_read(); 
+.................... bcd_day = i2c_read(); 
+.................... bcd_mon = i2c_read(0); 
+.................... i2c_stop(); 
+....................  
+....................  
+.................... // Convert the date/time values from BCD to 
+.................... // unsigned 8-bit integers.  Unpack the bits 
+.................... // in the PCF8583 registers where required. 
+.................... dt->seconds = bcd2bin(bcd_sec); 
+.................... dt->minutes = bcd2bin(bcd_min); 
+.................... dt->hours   = bcd2bin(bcd_hrs & 0x3F); 
+.................... dt->day     = bcd2bin(bcd_day & 0x3F); 
+.................... dt->month   = bcd2bin(bcd_mon & 0x1F); 
+.................... dt->weekday = bcd_mon >> 5; 
+.................... year_bits   = bcd_day >> 6; 
+....................  
+.................... // Read the year byte from NVRAM. 
+.................... // This is an added feature of this driver. 
+.................... year = PCF8583_read_byte(PCF8583_YEAR_REG); 
+....................  
+.................... // Check if the two "year bits" were incremented by 
+.................... // the PCF8583.  If so, increment the 8-bit year 
+.................... // byte (read from NVRAM) by the same amount. 
+.................... while(year_bits != (year & 3)) 
+....................       year++; 
+....................  
+.................... dt->year = year; 
+....................  
+.................... // Now update the year byte in the NVRAM 
+.................... // inside the PCF8583. 
+.................... PCF8583_write_byte(PCF8583_YEAR_REG, year); 
+....................  
+.................... } 
+....................  
+.................... //Método que permite establecer una alarma, dados horas, minutos y segundos 
+.................... //Author: Julio Navarro Lara 
+.................... void PCF8583_establecer_alarma(int8 horas, int8 minutos, int8 segundos){ 
+....................    int8 bcd_horas; 
+....................    int8 bcd_minutos; 
+....................    int8 bcd_segundos; 
+....................  
+....................    //Transformamos a BCD las horas y los minutos introducidos 
+....................    bcd_horas = bin2bcd(horas); 
+....................    bcd_minutos = bin2bcd(minutos); 
+....................    bcd_segundos = bin2bcd(segundos); 
+....................  
+....................    //Paramos de contar el tiempo para escribir los datos 
+....................    PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_STOP_COUNTING); 
+....................  
+....................    //Definimos las condiciones de la alarma 
+....................    PCF8583_write_byte(PCF8583_ALARM_CONTROL_REG, 
+....................                               PCF8583_DEFINIR_ALARMA); 
+....................  
+....................    //Desactivamos las interrupciones para que no interfieran en la escritura i2c 
+....................    disable_interrupts(GLOBAL); 
+....................    i2c_start(); 
+....................    i2c_write(PCF8583_WRITE_ADDRESS); 
+....................    //Escribimos en los registros de hora y minutos 
+....................    i2c_write(PCF8583_ALARM_100S_REG); 
+....................    i2c_write(0x00); 
+....................    i2c_write(bcd_segundos); 
+....................    i2c_write(bcd_minutos); 
+....................    i2c_write(bcd_horas); 
+....................    i2c_stop(); 
+....................  
+....................    //OJO! No volvemos a activar las interrupciones por si llamamos al método 
+....................    //dentro de una rutina de interrupción 
+....................  
+....................    //Activamos la alarma 
+....................    PCF8583_write_byte(PCF8583_CTRL_STATUS_REG, 
+....................                               PCF8583_ACTIVAR_ALARMA); 
+....................  
+....................  
+....................  
+....................    //Activamos el flag indicador de alarma 
+....................    alarma_activada = TRUE; 
+....................  
+.................... } 
+....................  
+.................... #include "LCDeasy.c" 
+.................... ////----------------------------------------------------------------------------//// 
+.................... // 	Funciones para la gestion del display LCD de la EasyPIC3 
+.................... //	con el compilador de CCS. 
+.................... //	Es una adaptación del archivo LCD.c de CCS para las prácticas de la 
+.................... //	asignatura, y por tanto no distribuible a usuarios no autorizados. 
+.................... //------------------------------------------------------------------------------//// 
+....................  
+.................... //  lcd_init()   Inicializa el LCD: debe ser llamada antes que las otras funciones. 
+.................... // 
+.................... //  lcd_putc(c)  Visualiza c en la siguiente posición del display. 
+.................... //               Caracteres especiales de control: 
+.................... //                      \f  Borrar display 
+.................... //                      \n  Saltar a la segunda linea 
+.................... //                      \b  Retroceder una posición. 
+.................... // 
+.................... //  lcd_gotoxy(x,y) Selecciona la nueva posicion de escritura en el display. 
+.................... //                  (la esquina superior izquierda es 1,1) 
+.................... // 
+.................... //  lcd_getc(x,y)   Devuelve el caracter de la posicion x,y del display. 
+.................... //			(esta función no va en la EASYPIC3, pues R/W=0) 
+.................... // 
+.................... //  lcd_send_byte(rs,byte)	escribe byte en el registro de datos(con rs=1) o de 
+.................... //				instrucciones (con rs=0). 
+.................... //------------------------------------------------------------------------------// 
+.................... // Conexion del LCD con el PIC: 
+.................... //     RB0 -- 
+.................... //     RB1 -- 
+.................... //     RB2  rs 
+.................... //     RB3  Enable 
+.................... //     RB4  D4 
+.................... //     RB5  D5 
+.................... //     RB6  D6 
+.................... //     RB7  D7 
+.................... // 
+.................... // Los pines D0-D3 del LCD no se usan 
+.................... // El pin RB0 del PIC no se usa 
+.................... // El pin RB1 no está conectado en la tarjeta, 
+.................... // podría ser para r/w 
+....................  
+.................... // Un-comment the following define to use port B 
+.................... #define use_portb_lcd TRUE 		//LINEA DES-COMENTADA---------------- 
+....................  
+....................  
+.................... struct lcd_pin_map {                 // This structure is overlayed 
+....................            int unused : 2 ;	//MODIFICADA PARA EASYPIC-------------------- 
+.................... 	   //BOOLEAN rw;		//MODIFICADA PARA EASYPIC-------------------- 
+.................... 	   BOOLEAN rs;           // on to an I/O port to gain 
+....................            BOOLEAN ENABLE;            // access to the LCD pins. 
+....................            		           	// The bits are allocated from 
+....................            			          // low order up.  ENABLE will 
+....................            int     data : 4;         	// be pin B3------------------------- 
+....................         } lcd; 
+....................  
+....................  
+.................... #if defined(__PCH__) 
+.................... #if defined use_portb_lcd 
+....................    #byte lcd = 0xF81                   // This puts the entire structure 
+.................... #else 
+....................    #byte lcd = 0xF83                   // This puts the entire structure 
+.................... #endif 
+.................... #else 
+.................... #if defined use_portb_lcd 
+....................    #byte lcd = 6                  // on to port B (at address 6) 
+.................... #else 
+....................    #byte lcd = 8                 // on to port D (at address 8) 
+.................... #endif 
+.................... #endif 
+....................  
+.................... #if defined use_portb_lcd 
+....................    #define set_tris_lcd(x) set_tris_b(x) 
+.................... #else 
+....................    #define set_tris_lcd(x) set_tris_d(x) 
+.................... #endif 
+....................  
+....................  
+.................... #define lcd_type 2           // 0=5x7, 1=5x10, 2=2 lines 
+.................... #define lcd_line_two 0x40    // LCD RAM address for the second line 
+....................  
+....................  
+.................... BYTE const LCD_INIT_STRING[4] = {0x24 | (lcd_type << 2), 0xF, 1, 6}; 
+....................                              // These bytes need to be sent to the LCD 
+....................                              // to start it up. 
+....................  
+....................  
+....................                              // The following are used for setting 
+....................                              // the I/O port direction register. 
+....................  
+.................... struct lcd_pin_map const LCD_WRITE = {3,0,0,0}; // For write mode all pins are out 
+.................... struct lcd_pin_map const LCD_READ = {3,0,0,15}; // For read mode data pins are in 
+....................  
+....................  
+....................  
+.................... BYTE lcd_read_byte() { 
+....................       BYTE low,high; 
+....................       set_tris_lcd(LCD_READ); 
+....................       //////lcd.rw = 1; 
+....................       delay_cycles(1); 
+....................       lcd.enable = 1; 
+....................       delay_cycles(1); 
+....................       high = lcd.data; 
+....................       lcd.enable = 0; 
+....................       delay_cycles(1); 
+....................       lcd.enable = 1; 
+....................       delay_us(1); 
+....................       low = lcd.data; 
+....................       lcd.enable = 0; 
+....................       set_tris_lcd(LCD_WRITE); 
+....................       return( (high<<4) | low); 
+.................... } 
+....................  
+....................  
+.................... void lcd_send_nibble( BYTE n ) { 
+....................       lcd.data = n; 
+....................       delay_cycles(1); 
+....................       lcd.enable = 1; 
+....................       delay_us(2); 
+....................       lcd.enable = 0; 
+.................... } 
+....................  
+....................  
+.................... void lcd_send_byte( BYTE address, BYTE n ) { 
+....................  
+....................       lcd.rs = 0; 
+....................       delay_us(3000); 
+.................... //      while ( bit_test(lcd_read_byte(),7) ) ; 
+....................       lcd.rs = address; 
+....................       delay_cycles(1); 
+....................       //////////lcd.rw = 0; 
+....................       delay_cycles(1); 
+....................       lcd.enable = 0; 
+....................       lcd_send_nibble(n >> 4); 
+....................       lcd_send_nibble(n & 0xf); 
+.................... } 
+....................  
+....................  
+.................... void lcd_init() { 
+....................     BYTE i; 
+....................     set_tris_lcd(LCD_WRITE); 
+....................     lcd.rs = 0; 
+....................     /////lcd.rw = 0; 
+....................     lcd.enable = 0; 
+....................     delay_ms(50); 
+....................     //for(i=1;i<=3;++i) { 
+....................     //   lcd_send_nibble(3); 
+....................     //  delay_ms(5); 
+....................     //} 
+....................     lcd_send_nibble(2); 
+....................     delay_ms(5); 
+....................     for(i=0;i<=3;++i) 
+....................        { lcd_send_byte(0,LCD_INIT_STRING[i]); 
+....................         delay_ms(5); } 
+.................... } 
+....................  
+....................  
+.................... void lcd_gotoxy( BYTE x, BYTE y) { 
+....................    BYTE address; 
+....................  
+....................    if(y!=1) 
+....................      address=lcd_line_two; 
+....................    else 
+....................      address=0; 
+....................    address+=x-1; 
+....................    lcd_send_byte(0,0x80|address); 
+.................... } 
+....................  
+.................... void lcd_putc( char c) { 
+....................    switch (c) { 
+....................      case '\f'   : lcd_send_byte(0,1); 
+....................                    delay_ms(2); 
+....................                                            break; 
+....................      case '\n'   : lcd_gotoxy(1,2);        break; 
+....................      case '\b'   : lcd_send_byte(0,0x10);  break; 
+....................      default     : lcd_send_byte(1,c);     break; 
+....................    } 
+.................... } 
+....................  
+.................... char lcd_getc( BYTE x, BYTE y) { 
+....................    char value; 
+....................  
+....................     lcd_gotoxy(x,y); 
+....................     while ( bit_test(lcd_read_byte(),7) ); // wait until busy flag is low 
+....................     lcd.rs=1; 
+....................     value = lcd_read_byte(); 
+....................     lcd.rs=0; 
+....................     return(value); 
+.................... } 
+....................  
+.................... #include "1wire.c" 
+.................... /***********************1Wire Class***********************/ 
+.................... /*Funciones básicas para comunicación con un solo sensor 1wire */ 
+.................... /*********************************************************/ 
+.................... /*-------1-wire definitions-------*/ 
+....................  
+.................... #define ONE_WIRE_PIN PIN_A5 //modificar de acuerdo con la tarjeta 
+....................  
+....................  
+.................... /************onewire_reset*************************************************/ 
+.................... void onewire_reset()  // OK if just using a single permanently connected device 
+.................... { 
+....................  output_low(ONE_WIRE_PIN); 
+....................  delay_us( 500 ); // pull 1-wire low for reset pulse 
+....................  output_float(ONE_WIRE_PIN); // float 1-wire high 
+....................  delay_us( 500 ); // wait-out remaining initialisation window. 
+....................  output_float(ONE_WIRE_PIN); 
+.................... } 
+....................  
+.................... /*********************** onewire_write() ********************************/ 
+.................... /*Esta función escribe un byte en el sensor.*/ 
+.................... /* */ 
+.................... /*Parametros: byte - el byte a escribir en el 1wire */ 
+....................  
+.................... void onewire_write(int data) 
+.................... { 
+....................  int count; 
+....................  
+....................  for (count=0; count<8; ++count) 
+....................  { 
+....................   output_low(ONE_WIRE_PIN); 
+....................   delay_us( 2 ); // pull 1-wire low to initiate write time-slot. 
+....................   output_bit(ONE_WIRE_PIN, shift_right(&data,1,0)); // set output bit on 1-wire 
+....................   delay_us( 60 ); // wait until end of write slot. 
+....................   output_float(ONE_WIRE_PIN); // set 1-wire high again, 
+....................   delay_us( 2 ); // for more than 1us minimum. 
+....................  } 
+.................... } 
+....................  
+.................... /*********************** read1wire() *********************************/ 
+.................... /*Esta función lee un dato de 8 bits del sensor.*/ 
+.................... /*Devuelve: dato de 8-bit (1-byte)*/ 
+....................  
+.................... int onewire_read() 
+.................... { 
+....................  int count, data; 
+....................  
+....................  for (count=0; count<8; ++count) 
+....................  { 
+....................   output_low(ONE_WIRE_PIN); 
+....................   delay_us( 2 ); // pull 1-wire low to initiate read time-slot. 
+....................   output_float(ONE_WIRE_PIN); // now let 1-wire float high, 
+....................   delay_us( 8 ); // let device state stabilise, 
+....................   shift_right(&data,1,input(ONE_WIRE_PIN)); // and load result. 
+....................   delay_us( 120 ); // wait until end of read slot. 
+....................  } 
+....................  
+....................  return( data ); 
+.................... } 
+....................  
+.................... void ow_write_bit(int1 data) 
+.................... { 
+....................   output_low(ONE_WIRE_PIN); 
+....................   delay_us( 2 ); // pull 1-wire low to initiate write time-slot. 
+....................   output_bit(ONE_WIRE_PIN, data); // set output bit on 1-wire 
+....................   delay_us( 60 ); // wait until end of write slot. 
+....................   output_float(ONE_WIRE_PIN); // set 1-wire high again, 
+....................   delay_us( 2 ); // for more than 1us minimum. 
+.................... } 
+....................  
+.................... int1 ow_read_bit() 
+.................... { 
+....................   int1 data; 
+....................  
+....................   output_low(ONE_WIRE_PIN); 
+....................   delay_us( 2 ); // pull 1-wire low to initiate read time-slot. 
+....................   output_float(ONE_WIRE_PIN); // now let 1-wire float high, 
+....................   delay_us( 8 ); // let device state stabilise, 
+....................   data = input(ONE_WIRE_PIN); // and load result. 
+....................   delay_us( 120 ); // wait until end of read slot. 
+....................  
+....................   return( data ); 
+.................... } 
+....................  
+.................... /////////////////////////////////////////////////////////////////// 
+....................  
+.................... void write_bit(int1 bitval) 
+.................... { 
+....................    output_low(ONE_WIRE_PIN); 
+....................  
+....................    if(bitval == 1) { 
+....................       delay_us(1);      // 1uS min. Original code relied on 8051 being slow 
+....................       output_float(ONE_WIRE_PIN); 
+....................    } 
+....................    delay_us(105);       // Wait for end of timeslot 
+....................    output_float(ONE_WIRE_PIN); 
+.................... } 
+....................  
+.................... int8 read_bit(void) 
+.................... { 
+....................    output_low(ONE_WIRE_PIN); 
+....................    delay_us(1);         // 1uS min. Original code relied on 8051 being slow 
+....................    output_float(ONE_WIRE_PIN); 
+....................    delay_us(20);        // Wait at least 15mS from start of time slot 
+....................    return(input(ONE_WIRE_PIN));   // Delay to finish time slot (total 60 to 120uS) 
+.................... }                       // must be done next. 
+....................  
+....................  
+....................  
+.................... #include "ds1820.c" 
+....................  
+.................... /***************************************************/ 
+.................... /*Driver básico del termómetro/termostato ds1820.c */ 
+.................... // 
+.................... //Realiza una secuencia completa de incialización, conversión 
+.................... //de temperatura, y lectura del (único) sensor de temperatura 
+.................... //con alimentación externa (no parásita). 
+.................... // 
+.................... /***************************************************/ 
+....................  
+.................... float ds1820_read(int* dir) 
+.................... { 
+....................  int8 busy=0, temp1, temp2; 
+....................  signed int16 temp3; 
+....................  float result; 
+....................  
+....................  onewire_reset();     // Cada acceso al sensor debe iniciarse con reset 
+....................  onewire_write(0x55); //Instrucción MATCH ROM 
+....................  //Mandamos por el one wire la dirección dir de 64 bits 
+....................  onewire_write(dir[0]); 
+....................  onewire_write(dir[1]); 
+....................  onewire_write(dir[2]); 
+....................  onewire_write(dir[3]); 
+....................  onewire_write(dir[4]); 
+....................  onewire_write(dir[5]); 
+....................  onewire_write(dir[6]); 
+....................  onewire_write(dir[7]); 
+....................  onewire_write(0x44); //Orden de inicio de conversión de temperatura 
+....................  
+....................  while (busy == 0) 	//el sensor mantiene la linea a 0 mientras realiza la conversión 
+....................   busy = onewire_read(); //y la deja a 1 al completarla 
+....................  
+....................  onewire_reset(); 
+....................  onewire_write(0x55); //Instrucción MATCH ROM 
+....................  onewire_write(dir[0]); 
+....................  onewire_write(dir[1]); 
+....................  onewire_write(dir[2]); 
+....................  onewire_write(dir[3]); 
+....................  onewire_write(dir[4]); 
+....................  onewire_write(dir[5]); 
+....................  onewire_write(dir[6]); 
+....................  onewire_write(dir[7]); 
+....................  onewire_write(0xBE); //Envío de la orden READ SCRATCHPAD (lectura de la memoria temporal) 
+....................  temp1 = onewire_read(); //lectura del LSB de la temperatura 
+....................  temp2 = onewire_read(); //lectura del MSB de la temperatura 
+....................  
+....................  temp3 = make16(temp2, temp1); // 
+....................  result = (float) temp3 / 2.0;   //Cálculo para el DS18S20 con 0.5 grad C de resolución 
+.................... // result = (float) temp3 / 16.0;  //Cálculo para el DS18B20 con 0.1 grad C de resolución 
+....................  
+....................  delay_ms(200); 
+....................  return(result); 
+.................... } 
+....................  
+.................... //Recoge las direcciones de dos dispositivos y las devuelve en los vectores de int pasados como 
+.................... //argumento (cada instrucción ocupa 64 bits). Funciona también si hay más dispositivos conectados, 
+.................... //pero sólo devuelve las direcciones de dos de ellos. 
+.................... void ds1820_recoger_direcciones(int* dir1, int* dir2) 
+.................... { 
+....................    int contador, contador2; 
+....................    int bit1, bit2; 
+....................  
+....................    onewire_reset(); 
+....................    onewire_write(0xF0); //Función ROM SEARCH 
+....................  
+....................    //Recorremos el array de 8 ints que contiene la dirección 
+....................    for(contador=0; contador<8; contador++) 
+....................    { 
+....................       for(contador2=0; contador2<8; contador2++) 
+....................       { 
+....................         //Leemos el bit correspondiente de dirección de los dispositivos 
+....................         bit1 = ow_read_bit(); 
+....................           
+....................         //Leemos el segundo bit, que será el complemento del anterior si no hay conflictos 
+....................         bit2 = ow_read_bit(); 
+....................  
+....................         //Si los bits son complementarios, tenemos que todos los dispositivos tienen el mismo bit de 
+....................         //dirección en esa posición. 
+....................         if(bit1!=bit2) 
+....................         { 
+....................            shift_right(&(dir1[contador]),1,bit1); //Guardamos el resultado 
+....................  
+....................            //Escribimos el bit de dirección para confirmar a los dispositivos la identificación 
+....................            ow_write_bit(bit1); 
+....................         }else 
+....................         { 
+....................            //Si no son complementarios, habrá conflicto, y habrá al menos un dispositivo con 0 en esa 
+....................            //posición y al menos uno con 1. Elegimos el que tiene el 1 enviando un 1 por la línea e  
+....................            //inhabilitándose los que tienen 0, que ya no contestarán a la función. 
+....................            shift_right(&(dir1[contador]),1,1); 
+....................  
+....................            ow_write_bit(1); 
+....................         } 
+....................       } 
+....................    } 
+....................  
+....................    //Repetimos exactamente el mismo proceso pero eligiendo en los conflictos el dispositivo con 0. 
+....................    onewire_reset(); 
+....................    onewire_write(0xF0); 
+....................  
+....................    for(contador=0; contador<8; contador++) 
+....................    { 
+....................       for(contador2=0; contador2<8; contador2++) 
+....................       { 
+....................         bit1 = ow_read_bit(); 
+....................  
+....................         bit2 = ow_read_bit(); 
+....................  
+....................         if(bit1!=bit2) 
+....................         { 
+....................            shift_right(&(dir2[contador]),1,bit1);  
+....................  
+....................            ow_write_bit(bit1); 
+....................         }else 
+....................         { 
+....................            shift_right(&(dir2[contador]),1,0); 
+....................  
+....................            ow_write_bit(0); 
+....................         } 
+....................       } 
+....................    } 
+....................  
+.................... } 
+....................  
+....................  
+.................... /* 
+.................... //Establece la temperatura máxima y mínima para el termostato de todos los dispositivos 
+.................... //conectados. 
+.................... void ds1820_establecer_TH_TL(float th, float tl){ 
+....................    float th2, tl2; 
+....................    onewire_reset(); 
+....................    onewire_write(0xCC); //Accedemos a todos los dispositivos 
+....................    onewire_write(0x4E); //Envío de la orden Write Scratchpad (escritura en la memoria principal) 
+....................    th2=2*th; 
+....................    tl2=2*tl; 
+....................    onewire_write((int8)th2); 
+....................    onewire_write((int8)tl2); 
+....................  
+....................    //Copiamos los valores en la ROM 
+....................    onewire_reset(); 
+....................    onewire_write(0xCC); 
+....................    onewire_write(0x48); 
+....................  
+....................    //Dejamos un poco de tiempo para que se escriba en la EEPROM 
+....................    //El tiempo ha sido calculado a partir de la simulación en Proteus 
+....................    delay_us(10600); 
+....................  
+.................... } 
+....................  
+....................  
+.................... //Intenta buscar la alarma del dispositivo con dirección dir. 
+.................... //Si ha saltado, devuelve TRUE, y en caso contrario, FALSE. 
+.................... int1 ds1820_termostato(int* dir){ 
+....................    int busy=0; 
+....................    int contador, contador2; 
+....................    int bit1, bit2, bitt; 
+....................  
+....................    //Primero forzamos la conversión de la temperatura 
+....................    onewire_reset(); 
+....................    onewire_write(0x55); //Instrucción MATCH ROM 
+....................    //Mandamos por el one wire la dirección dir de 64 bits 
+....................    onewire_write(dir[0]); 
+....................    onewire_write(dir[1]); 
+....................    onewire_write(dir[2]); 
+....................    onewire_write(dir[3]); 
+....................    onewire_write(dir[4]); 
+....................    onewire_write(dir[5]); 
+....................    onewire_write(dir[6]); 
+....................    onewire_write(dir[7]); 
+....................    onewire_write(0x44); 
+....................  
+....................    while(busy == 0) 
+....................       busy = onewire_read(); 
+....................  
+....................    onewire_reset(); 
+....................    onewire_write(0xEC); //Buscamos la alarma de algún dispositivo (función ALARM SEARCH) 
+....................  
+....................    //Leemos dos bits consecutivos. Si el dispositivo tiene el flag de alarma activado, escribirá 
+....................    //en la línea el bit más bajo de su dirección ROM y, después, su complemento. Si no, no hará 
+....................    //nada. 
+....................    for(contador=0; contador<8; contador++) 
+....................    { 
+....................       for(contador2=0; contador2<8; contador2++) 
+....................       { 
+....................         bit1 = ow_read_bit(); 
+....................  
+....................         bit2 = ow_read_bit(); 
+....................          
+....................         bitt = shift_right(&(dir[contador]),1,0); 
+....................  
+....................         if((bit1!=bit2) && (bitt!=bit1)) 
+....................             //return FALSE; 
+....................             bitt=bit1; 
+....................         if(bit1==1 && bit2==1) 
+....................             //return FALSE; 
+....................             bitt=bit1; 
+....................          
+....................         ow_write_bit(bitt); 
+....................       } 
+....................    } 
+....................  
+....................    return TRUE; 
+.................... } 
+.................... */ 
+....................  
+....................  
+....................  
+.................... #include "teclado.c" 
+.................... //*********************************************************************************** 
+.................... // Método que permite gestionar un teclado matricial de 4x3 conectado a los pines 
+.................... // B4B5B6B7 (filas) y a los D0D1D2 (columnas). El puerto D deberá estar definido como 
+.................... // port_d y los bits utilizados de B deberán ser "tecladox", dónde x va de 1 a 4 
+.................... //*********************************************************************************** 
+.................... //Author: Julio Navarro Lara 
+....................  
+.................... //Definimos los caracteres que corresponden a cada botón del teclado 
+.................... const char caracteres[12]={'1','2','3','4','5','6','7','8','9','S','0','N'}; 
+....................  
+.................... //Método para detectar la pulsación de una tecla. Devuelve el caracter pulsado. 
+.................... char find_key() 
+.................... { 
+....................    //Variables auxiliares 
+....................    int8 fila, columna, temp, contador, puertoB; 
+....................    char key = 0; //Tecla pulsada 
+....................  
+....................    //Recorremos las filas forzando un valor con el puerto B para detectar 
+....................    //la tecla pulsada 
+....................    for(fila=0; fila < NUM_FILAS; fila++){ 
+....................  
+....................       //Forzamos la salida de B a que tenga todo 1 menos la posición a inspeccionar 
+....................       puertoB = ~(1 << fila); 
+....................       teclado1 = puertoB & 0b1; 
+....................       teclado2 = (puertoB & 0b10) >> 1; 
+....................       teclado3 = (puertoB & 0b100) >> 2; 
+....................       teclado4 = (puertoB & 0b1000) >> 3; 
+....................  
+....................       //Introducimos un poco de retraso 
+....................       for(contador=0; contador<100; contador++); 
+....................  
+....................       //Guardamos el valor que aparece en el puerto D 
+....................       //(en sus 3 bits menos significativos) 
+....................       temp = port_d & 0b00000111; 
+....................  
+....................       //Iteramos en base a esto para ver si alguna columna está activa 
+....................       //Una vez localizada la columna, podemos encontrar el caracter teniendo en cuenta 
+....................       //también la fila que está activa. 
+....................       for(columna=0; columna < NUM_COLUMNAS; columna++){ 
+....................  
+....................          //Realizamos la operación AND entre el valor que hay y un 1 desplazado 
+....................          //según la columna que nos encontremos 
+....................          if((temp & (1 << columna))==0) 
+....................          { 
+....................             //Si da 0, hemos localizado la columna dónde se encuentra la tecla 
+....................             //Guardamos su índice teniendo en cuenta que las teclas se numeran de izquierda a derecha y 
+....................             //de arriba a abajo. 
+....................             int8 index; 
+....................             index = (fila*NUM_COLUMNAS)+(2-columna); 
+....................  
+....................             //Buscamos la tecla a la que se hace referencia 
+....................             key = caracteres[index]; 
+....................  
+....................             //Saltamos para salirnos del bucle 
+....................             goto hecho; 
+....................  
+....................          } 
+....................  
+....................       } 
+....................    } 
+....................  
+....................    hecho: 
+....................  
+....................    //Devolvemos el caracter 
+....................    return key; 
+....................  
+.................... } 
+....................  
+.................... //Devuelve la tecla pulsada, esperando a que el usuario la suelte 
+.................... char get_key() 
+.................... { 
+....................    char key; 
+....................    //Detectamos la tecla pulsada 
+....................    key=find_key(); 
+....................    //Si se pulsa alguna tecla, nos esperamos hasta que se suelte para recoger el valor 
+....................    if(key) 
+....................       while(find_key() != 0); 
+....................    return key; 
+.................... } 
+....................  
+....................  
+....................  
+.................... #include "eeprom.c" 
+.................... //****************************************************** 
+.................... //Programa para escritura y lectura de la memoria EEPROM 
+.................... //****************************************************** 
+.................... //Author: Julio Navarro Lara 
+....................  
+....................  
+.................... //Definimos las palabras de control, que constan de tres partes 
+.................... //   - Los bits más altos de direccionamiento del dispositivo (fijos): 1010 
+.................... //   - Los bits de dirección configurables A2A1A0: 111 (en este caso) 
+.................... //   - El bit R/W', 1 para lectura y 0 para escritura 
+.................... #define CONTROL_W 0b10101110 
+.................... #define CONTROL_R 0b10101111 
+....................  
+.................... void graba_ee(long int dir, int tam, int *wdata) 
+.................... { 
+....................    boolean ack; 
+....................    int i; 
+....................    //Escribimos la palabra de control 
+....................    do{ 
+....................       i2c_start(); 
+....................       ack=i2c_write(CONTROL_W); 
+....................    }while(ack); //Esperamos a que el dispositivo responda 
+....................    //Cuando está listo, devuelve un ACK como 0 
+....................    //Mandamos la dirección en la que se quiere escribir 
+....................    i2c_write(dir>>8); 
+....................    i2c_write(dir & 255); 
+....................  
+....................    //Escribimos los datos contenidos en wdata 
+....................    for(i=0;i<tam;i++){ 
+....................       i2c_write(*wdata); 
+....................       wdata++; 
+....................    } 
+....................  
+....................    //Finalizamos la comunicación 
+....................    i2c_stop(); 
+.................... } 
+....................  
+.................... void lee_ee(long int dir, int tam, int8 *rdata) 
+.................... { 
+....................    boolean ack; 
+....................    int i; 
+....................    //Comenzamos escribiendo la dirección que queremos consultar 
+....................    //al igual que ya hicimos con el método de escritura 
+....................    do{ 
+....................       i2c_start(); 
+....................       ack=i2c_write(CONTROL_W); 
+....................    }while(ack); //Esperamos a que el dispositivo responda 
+....................    i2c_write(dir>>8); 
+....................    i2c_write(dir & 255); 
+....................  
+....................    //Reiniciamos la comunicación para leer los datos 
+....................    i2c_start(); 
+....................    //Escribimos palabra de control de escritura 
+....................    i2c_write(CONTROL_R); 
+....................  
+....................    //Leemos hasta que completemos el bus 
+....................    for(i=0; i<tam-1; i++){ 
+....................       //Se responde en cada caso con ACK 
+....................       //(la función i2c_read tiene su argumento al revés: 1 corresponde a 
+....................       //ACK y 0 a NACK, cuando en la línea un valor bajo es ACK y uno alto, NACK) 
+....................       *rdata=i2c_read(1); 
+....................       rdata++; 
+....................    } 
+....................    //Debemos terminar la lectura con un NACK 
+....................    *rdata=i2c_read(0); 
+....................    i2c_stop(); 
+.................... } 
+....................  
+....................  
+....................  
+.................... #use fast_io(A) 
+.................... #use fast_io(B) 
+.................... #use fast_io(C) 
+.................... #use fast_io(D) 
+....................  
+....................  
+....................  
+....................  
+....................  
+.................... //================================= 
+.................... void main() 
+.................... { 
+0004:  CLRF   FF8
+0006:  BCF    FD0.7
+0008:  CLRF   FEA
+000A:  CLRF   FE9
+000C:  BCF    FB8.3
+000E:  MOVLW  19
+0010:  MOVWF  FAF
+0012:  MOVLW  22
+0014:  MOVWF  FAC
+0016:  MOVLW  90
+0018:  MOVWF  FAB
+001A:  MOVF   FC1,W
+001C:  ANDLW  C0
+001E:  IORLW  0F
+0020:  MOVWF  FC1
+0022:  MOVLW  07
+0024:  MOVWF  FB4
+0026:  CLRF   05
+....................  
+....................    date_time_t tiempo; 
+....................    signed int termostato; 
+....................    int8 num_intervalos; 
+....................    long num_registros; 
+....................    int8 anno_actual; 
+....................    int8 anno_actual_1_to_3; 
+....................    int8 data[6]; 
+....................    //Borrar estas líneas después 
+....................    float temperatura; 
+....................    int8 count; 
+....................    int8 m; 
+....................    int1 bit; 
+....................    int dir1[8], dir2[8]; 
+....................  
+....................    set_tris_b(0x03); 
+0028:  MOVLW  03
+002A:  MOVWF  F93
+....................    set_tris_d(0x0F); 
+002C:  MOVLW  0F
+002E:  MOVWF  F95
+....................  
+....................    sistema_encendido = 0; 
+0030:  BCF    F83.5
+....................    motor = 0; 
+0032:  BCF    F83.6
+....................    caldera_encendida = 0; 
+0034:  BCF    F83.7
+....................    /* 
+....................    termostato = 20; 
+....................    num_intervalos = 0; 
+....................    num_registros = 0; 
+....................    anno_actual = 9; 
+....................    anno_actual_1_to_3 = 1; 
+....................  
+....................    data[0] = termostato; 
+....................    data[1] = num_intervalos; 
+....................    data[2] = (int)(num_registros/256); 
+....................    data[3] = (int)(num_registros - data[0]*256); 
+....................    data[4] = anno_actual; 
+....................    data[5] = anno_actual_1_to_3; 
+....................  
+....................    graba_ee(eeprom_termostato, 6, data); 
+....................    */ 
+....................    /* 
+....................    tiempo.month   = ; 
+....................    tiempo.day     = ; 
+....................    tiempo.year    = ; 
+....................    tiempo.hours   = ; 
+....................    tiempo.minutes = ; 
+....................    tiempo.seconds = ; 
+....................    tiempo.weekday = ; 
+....................  
+....................    PCF8583_set_datetime(&tiempo); 
+....................    */ 
+....................  
+....................  
+....................    /* 
+....................    ds1820_recoger_direcciones(dir1, dir2); 
+....................  
+....................    for(termostato=7; termostato>=0; termostato--) 
+....................    { 
+....................       printf("%X", dir1[termostato]); 
+....................    } 
+....................  
+....................    printf("\r"); 
+....................  
+....................    for(termostato=7; termostato>=0; termostato--) 
+....................    { 
+....................       printf("%X", dir2[termostato]); 
+....................    } 
+....................  
+....................    printf("\r*************\r"); 
+....................  
+....................  
+....................  
+....................     ds1820_recoger_direcciones(dir1, dir2); 
+....................  
+....................    for(termostato=7; termostato>=0; termostato--) 
+....................    { 
+....................       printf("%X", dir1[termostato]); 
+....................    } 
+....................  
+....................    printf("\r"); 
+....................  
+....................    for(termostato=7; termostato>=0; termostato--) 
+....................    { 
+....................       printf("%X", dir2[termostato]); 
+....................    } 
+....................  
+....................    printf("\r*************\r"); 
+....................  
+....................    printf("%3.2f\r", ds1820_read(dir1)); 
+....................    printf("%3.2f\r", ds1820_read(dir2)); 
+....................  
+....................     
+....................    ds1820_establecer_TH_TL(127.5, (float)20); 
+....................  
+....................    while(1) 
+....................    { 
+....................       if(ds1820_termostato(dir1)) 
+....................          sistema_encendido = TRUE; 
+....................       else 
+....................          sistema_encendido = FALSE; 
+....................  
+....................       if(ds1820_termostato(dir2)) 
+....................          caldera_encendida = TRUE; 
+....................       else 
+....................          caldera_encendida = FALSE; 
+....................  
+....................    } 
+....................    */ 
+....................  
+.................... } 
+0036:  SLEEP 
+
+Configuration Fuses:
+   Word  1: 0200   HS NOIESO NOFCMEN RESERVED
+   Word  2: 161E   BROWNOUT NOWDT BORV25 PUT WDT2048
+   Word  3: 8300   PBADEN CCP2C1 NOLPT1OSC MCLR RESERVED
+   Word  4: 0081   STVREN NODEBUG NOLVP NOXINST RESERVED
+   Word  5: C00F   NOPROTECT NOCPD NOCPB
+   Word  6: E00F   NOWRT NOWRTD NOWRTC NOWRTB
+   Word  7: 400F   NOEBTR NOEBTRB

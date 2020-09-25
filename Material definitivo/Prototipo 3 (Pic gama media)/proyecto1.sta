@@ -1,0 +1,210 @@
+
+ROM used: 8106 (99%)
+          8161 (100%) including unused fragments
+
+          2 Average locations per line
+          7 Average locations per statement
+
+RAM used: 75 (20%) at main() level
+          147 (40%) worst case
+
+Stack used: 7 worst case (out of 7 total available)
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+ 1338   511  41  proyecto1.c
+  409     0   0  16F887.H
+   44     0   0  proyecto1.h
+   28     0   0  C:\Program Files\PICC2\drivers\ctype.h
+  874   389  31  C:\Program Files\PICC2\drivers\stdlib.h
+   28     0   0  C:\Program Files\PICC2\drivers\stddef.h
+  417   126  10  C:\Program Files\PICC2\drivers\string.h
+  253    74   6  PCF8583.c
+  176    51   4  LCDeasy.c
+   63    22   2  1wire.c
+  101    47   4  ds1820.c
+   70    25   2  eeprom.c
+----- -----
+ 3801  1245 Total
+
+Page ROM  %  RAM   Vol Diff  Functions:
+---- --- --- ---   --- ----  ----------
+0     24   0   1             @delay_ms1
+0     19   0   1             @delay_us1
+0     18   0   1             @I2C_WRITEU_1
+0     15   0   1             @I2C_READU_1
+0     41   1   2             @MUL88
+1     23   0   5             @MUL1616
+0    119   1  13             @MULFF
+1     31   0   2             @ITOF
+1    326   4  16             @ADDFF
+1    204   3  14             @DIVFF
+0    229   3   9  1805 10.5  atoi
+1     37   0   5             @DIV1616
+0     28   0   2   123  1.9  PCF8583_write_byte
+ Inline        2   195  2.4  PCF8583_read_byte
+0     17   0   2   201  5.3  bin2bcd
+1     19   0   3   155  4.7  bcd2bin
+ Inline       10   847  4.6  PCF8583_set_datetime
+1    268   3  12  1078  6.2  PCF8583_read_datetime
+0      8   0   0             @const381
+0     16   0   1   134  2.2  lcd_send_nibble
+0     48   1   3   249  3.8  lcd_send_byte
+0     47   1   2   307  4.7  lcd_init
+1     22   0   4   186  5.5  lcd_gotoxy
+1     53   1   1   275  3.9  lcd_putc
+0     29   0   1    86  1.3  onewire_reset
+0     39   0   2   272  4.3  onewire_write
+0     39   0   2   284  4.6  onewire_read
+1    110   1  13   474  4.3  ds1820_read
+1     39   0   2             @SITOF
+0    120   1  17   321  3.1  ds1820_establecer_TH_TL
+0     33   0   4             @SFTOI
+1    105   1   3   622  5.1  ds1820_termostato
+0     61   1   9   380  6.9  graba_ee
+ Inline        9   502  7.4  lee_ee
+0      5   0   0    18  1.0  activacion_led
+3   1428  18   4  8756 15.0  MAIN
+0      6   0   0             @const503
+1     23   0   3             @DIV88
+2    129   2   6             @PRINTF_D_401
+0     14   0   0             @const512
+1     65   1  10             @FLT
+0     13   0   0             @const516
+0     14   0   0             @const517
+3      8   0   0             @goto11757
+2     43   1   3   279  3.7  apagar_caldera
+1    238   3   5  1719  9.0  apagar_sistema
+2    163   2   5  1175  7.6  buscar_numero
+0     48   1   3   420  4.1  buscar_numero_rs232
+1    274   3  12   497  6.5  comp_caldera
+3    266   3   0   336  4.9  comprobar_temperatura
+1    125   2  18   461  8.2  diferencia_tiempo_sec
+1     16   0   0   127  2.6  encender_caldera
+1     24   0   0   243  3.2  encender_sistema
+0    622   8  10  3447 11.8  inicializacion
+0     21   0   0             @const548
+0     11   0   0             @goto12062
+0     15   0   0             @const564
+ Inline        2   163  2.5  mostrar_temperatura
+0     30   0   0             @const565
+1     33   0   5             @FTOSD
+2     68   1  13             @DIV3232
+3    248   3  13             @PRINTF_L32D_401FPFPF
+3     67   1   2             @PRINTF_U_401
+2   1188  15  28  4291 11.5  representar_registros
+0     27   0   0             @const587
+0     30   0   0             @const588
+2     83   1   2             @PRINTF_U_4800_62_63
+0     13   0   0             @const613
+0     33   0   0             @const614
+0     23   0   0             @const615
+0     26   0   0             @const617
+2    242   3  13             @PRINTF_L32D_4800_62_63FPFPF
+0     33   0   0             @const621
+0     25   0   0             @const622
+2     96   1   9             @PRINTF_LU_4800_62_63
+0     32   0   0             @const625
+
+Program metrics:
+    Functions               34
+    Statements              1245
+    Comments                1579
+    Volume (V)              48815
+    Difficilty (D)          183.4
+    Effort to implement (E) 8952878
+    Time to implement (T)   138 hours, 10 minutes
+    Est Delivered Bugs (B)  14
+    Cyclomatic Complexity   115
+    Maintainability (MI)    29
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00003     4  0  
+00004-00032    47  0  
+00033-007FF  1991  6  
+00800-00FFF  2035  13  
+01000-017FF  2012  36  
+01800-01FFF  2017  31  
+
+
+
+THE FOLLOWING IS TEMPORARY FOR DIAGNOSTIC USE ONLY:
+
+    n1    n2    N1    N2   v(G)
+     0     1     0     0     0    @delay_ms1
+     0     1     0     0     0    @delay_us1
+     0     1     0     0     0    @I2C_WRITEU_1
+     0     1     0     0     0    @I2C_READU_1
+     0     1     0     0     0    @MUL88
+     0     1     0     0     0    @MUL1616
+     0     1     0     0     0    @MULFF
+     0     1     0     0     0    @ITOF
+     0     1     0     0     0    @ADDFF
+     0     1     0     0     0    @DIVFF
+    21   109   148   109     9    atoi
+     0     1     0     0     0    @DIV1616
+     4    15    15    14     0    PCF8583_write_byte
+     5    20    23    19     0    PCF8583_read_byte
+    12    18    25    16     1    bin2bcd
+    10    16    18    15     0    bcd2bin
+     9    66    68    68     0    PCF8583_set_datetime
+    12    78    85    81     0    PCF8583_read_datetime
+     0     1     0     0     0    @const381
+     5    17    15    15     0    lcd_send_nibble
+     8    26    24    25     0    lcd_send_byte
+    10    29    31    27     1    lcd_init
+    11    19    19    19     1    lcd_gotoxy
+     9    23    35    20     4    lcd_putc
+     3    12    12    10     0    onewire_reset
+     9    26    28    25     1    onewire_write
+    10    26    31    24     1    onewire_read
+     9    41    45    39     0    ds1820_read
+     0     1     0     0     0    @SITOF
+     6    30    31    31     0    ds1820_establecer_TH_TL
+     0     1     0     0     0    @SFTOI
+    11    52    56    48     1    ds1820_termostato
+    13    30    38    32     2    graba_ee
+    14    38    48    40     2    lee_ee
+     4     4     4     2     0    activacion_led
+    30   424   568   424    39    MAIN
+     0     1     0     0     0    @const503
+     0     1     0     0     0    @DIV88
+     0     1     0     0     0    @PRINTF_D_401
+     0     1     0     0     0    @const512
+     0     1     0     0     0    @FLT
+     0     1     0     0     0    @const516
+     0     1     0     0     0    @const517
+     0     1     0     0     0    @goto11757
+     8    28    28    26     0    apagar_caldera
+    17   110   129   117     4    apagar_sistema
+    15    75   105    76     8    buscar_numero
+     9    37    42    34     0    buscar_numero_rs232
+    13    35    54    35     3    comp_caldera
+    11    27    40    24     3    comprobar_temperatura
+    13    34    40    43     1    diferencia_tiempo_sec
+     6    15    16    13     0    encender_caldera
+     7    24    27    22     1    encender_sistema
+    24   196   251   192    16    inicializacion
+     0     1     0     0     0    @const548
+     0     1     0     0     0    @goto12062
+     0     1     0     0     0    @const564
+     6    19    19    16     0    mostrar_temperatura
+     0     1     0     0     0    @const565
+     0     1     0     0     0    @FTOSD
+     0     1     0     0     0    @DIV3232
+     0     1     0     0     0    @PRINTF_L32D_401FPFPF
+     0     1     0     0     0    @PRINTF_U_401
+    22   243   279   254    17    representar_registros
+     0     1     0     0     0    @const587
+     0     1     0     0     0    @const588
+     0     1     0     0     0    @PRINTF_U_4800_62_63
+     0     1     0     0     0    @const613
+     0     1     0     0     0    @const614
+     0     1     0     0     0    @const615
+     0     1     0     0     0    @const617
+     0     1     0     0     0    @PRINTF_L32D_4800_62_63FPFPF
+     0     1     0     0     0    @const621
+     0     1     0     0     0    @const622
+     0     1     0     0     0    @PRINTF_LU_4800_62_63
+     0     1     0     0     0    @const625

@@ -1,0 +1,155 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     @SCRATCH
+005     @INTERRUPT_AREA
+006     @INTERRUPT_AREA
+007     @INTERRUPT_AREA
+008     @INTERRUPT_AREA
+009     @INTERRUPT_AREA
+00A     @INTERRUPT_AREA
+00B     @INTERRUPT_AREA
+00C     @INTERRUPT_AREA
+00D     @INTERRUPT_AREA
+00E     @INTERRUPT_AREA
+00F     @INTERRUPT_AREA
+010     @INTERRUPT_AREA
+011     @INTERRUPT_AREA
+012     @INTERRUPT_AREA
+013     @INTERRUPT_AREA
+014     @INTERRUPT_AREA
+015     @INTERRUPT_AREA
+016     @INTERRUPT_AREA
+017     @INTERRUPT_AREA
+018     @INTERRUPT_AREA
+019-01C temperatura
+01D     activar_interrupciones
+01E     main.flag
+01F     main.c
+020-029 main.weekday
+02A-030 main.dt
+031-034 main.wdatos
+035-038 main.rdatos
+039     lcd_init.i
+039-03A PCF8583_read_datetime.dt
+039     main.@SCRATCH
+03A     lcd_init.@SCRATCH
+03A     main.@SCRATCH
+03B     PCF8583_read_datetime.year_bits
+03B     lcd_init.@SCRATCH
+03B     main.@SCRATCH
+03C     @PRINTF_U_528.P1
+03C     PCF8583_read_datetime.year
+03C     main.@SCRATCH
+03D     @PRINTF_U_528.P1
+03D     PCF8583_read_datetime.bcd_sec
+03E     @DIV88.P1
+03E     PCF8583_read_datetime.bcd_min
+03E     lcd_putc.c
+03F     lcd_gotoxy.x
+03F     PCF8583_read_datetime.bcd_hrs
+03F     @DIV88.P1
+040     lcd_gotoxy.y
+040     PCF8583_read_datetime.bcd_day
+040     @DIV88.@SCRATCH
+041     lcd_gotoxy.address
+041     PCF8583_read_datetime.bcd_mon
+042     PCF8583_write_byte.address
+042     PCF8583_read_byte.address
+042     PCF8583_read_datetime.@SCRATCH
+042     lcd_gotoxy.@SCRATCH
+043     PCF8583_write_byte.data
+043     PCF8583_read_byte.retval
+043     PCF8583_read_datetime.@SCRATCH
+044     @I2C_WRITE_1_31763_31764_8000000.P1
+044     @I2C_READ_1_31763_31764_8000000.P2
+044     PCF8583_read_datetime.@SCRATCH
+045     bcd2bin.bcd_value
+045     @I2C_READ_1_31763_31764_8000000.@SCRATCH
+046     bcd2bin.temp
+046     @I2C_READ_1_31763_31764_8000000.@SCRATCH
+047     bcd2bin.@SCRATCH
+048     lcd_send_byte.address
+049     lcd_send_byte.n
+04A     @delay_ms1.P1
+04A     lcd_send_byte.@SCRATCH
+04B     lcd_send_nibble.n
+04B     @delay_us1.P1
+F80     port_a
+F81     lcd
+F81     port_b
+F81.4   teclado1
+F81.5   teclado2
+F81.6   teclado3
+F81.7   teclado4
+F82     port_c
+F83     PSP_DATA
+F83     port_d
+F83.6   motor
+F83.7   caldera_encendida
+F84     port_e
+FB4.6   C1OUT
+FB4.7   C2OUT
+FBB-FBC CCP_2
+FBB     CCP_2_LOW
+FBC     CCP_2_HIGH
+FBE-FBF CCP_1
+FBE     CCP_1_LOW
+FBF     CCP_1_HIGH
+
+0156  @delay_ms1
+0186  @delay_us1
+0352  @I2C_READ_1_31763_31764_8000000
+0212  @I2C_WRITE_1_31763_31764_8000000
+009C  @const56
+0270  PCF8583_write_byte
+03D0  PCF8583_read_byte
+02C4  PCF8583_init
+03AA  bcd2bin
+0450  PCF8583_read_datetime
+00FC  @const103
+01A4  lcd_send_nibble
+01C2  lcd_send_byte
+02CE  lcd_init
+0608  lcd_gotoxy
+0638  lcd_putc
+0202  activacion_led
+0738  main
+011A  @const10364
+06AA  @DIV88
+06D2  @PRINTF_U_528
+0738  @cinit
+0136  hecho
+
+Project Files:
+    E:\programming\sed\Proyecto 1\proyecto1.c
+    E:\programming\sed\Proyecto 1\18F4520.H
+    E:\programming\sed\Proyecto 1\proyecto1.h
+    C:\Program Files\PICC\drivers\ctype.h
+    E:\programming\sed\Proyecto 1\PCF8583.c
+    E:\programming\sed\Proyecto 1\LCDeasy.c
+    E:\programming\sed\Proyecto 1\1wire.c
+    E:\programming\sed\Proyecto 1\ds1820.c
+    E:\programming\sed\Proyecto 1\teclado.c
+    E:\programming\sed\Proyecto 1\eeprom.c
+
+Units:
+    E:\programming\sed\Proyecto 1\proyecto1.c (main)
+
+Compiler Settings:
+    Processor:      PIC18F4520
+    Pointer Size:   16
+    ADC Range:      0-255
+    Opt Level:      9
+    Short,Int,Long: 1,8,16
+
+Output Files:
+    Errors:      E:\programming\sed\Proyecto 1\proyecto1.err
+    INHX32:      E:\programming\sed\Proyecto 1\proyecto1.hex
+    Symbols:     E:\programming\sed\Proyecto 1\proyecto1.sym
+    List:        E:\programming\sed\Proyecto 1\proyecto1.lst
+    Debug/COFF:  E:\programming\sed\Proyecto 1\proyecto1.cof
+    Call Tree:   E:\programming\sed\Proyecto 1\proyecto1.tre
+    Statistics:  E:\programming\sed\Proyecto 1\proyecto1.sta
